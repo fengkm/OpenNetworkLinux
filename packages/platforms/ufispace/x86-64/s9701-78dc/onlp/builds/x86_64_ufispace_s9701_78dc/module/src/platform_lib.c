@@ -350,7 +350,7 @@ bmc_fru_read(onlp_psu_info_t* info, int fru_id)
 {
     struct timeval new_tv;
     char cache_cmd[512] = {0};
-    char get_data_cmd[128] = {0};
+    char get_data_cmd[256] = {0};
     char cmd_out[128] = {0};
     char cache_file[128] = {0};
     int rv = ONLP_STATUS_OK;
