@@ -206,7 +206,7 @@ static int update_thermali_cpu_info(int local_id, onlp_thermal_info_t* info)
     } else if (local_id == ONLP_THERMAL_CPU4) {
         ONLP_TRY(onlp_file_read_int(&temperature, "/sys/class/hwmon/hwmon0/device/hwmon/hwmon0/temp5_input"));
     } else {
-        AIM_LOG_ERROR("unsupported thermal psu id (%d), func=%s\n", local_id, __FUNCTION__);
+        AIM_LOG_ERROR("unsupported thermal cpu id (%d), func=%s\n", local_id, __FUNCTION__);
         return ONLP_STATUS_E_PARAM;
     }
     

@@ -25,11 +25,129 @@
 #include <onlp/platformi/chassisi.h>
 #include "platform_lib.h"
 
+
+/* This is definitions for x86-64-ufispace-s9700-53dx*/
+/* OID map*/
+/*
+ * [01] CHASSIS----[01] ONLP_THERMAL_FRONT_MAC
+ *            |----[02] ONLP_THERMAL_REAR_MAC
+ *            |----[03] ONLP_THERMAL_ASIC
+ *            |----[04] ONLP_THERMAL_CPU1
+ *            |----[05] ONLP_THERMAL_CPU2
+ *            |----[06] ONLP_THERMAL_CPU3
+ *            |----[07] ONLP_THERMAL_CPU4
+ *            |----[08] ONLP_THERMAL_CPU_BOARD
+ *            |----[09] ONLP_THERMAL_PSU1_NEAR
+ *            |----[10] ONLP_THERMAL_PSU2_NEAR
+ *            |----[11] ONLP_THERMAL_QSFP_NEAR
+ *            |
+ *            |----[01] ONLP_FAN_1----[05] ONLP_LED_FAN_TRAY1
+ *            |----[02] ONLP_FAN_2----[05] ONLP_LED_FAN_TRAY1
+ *            |----[03] ONLP_FAN_3----[06] ONLP_LED_FAN_TRAY2
+ *            |----[04] ONLP_FAN_4----[06] ONLP_LED_FAN_TRAY2
+ *            |----[05] ONLP_FAN_5----[07] ONLP_LED_FAN_TRAY3
+ *            |----[06] ONLP_FAN_6----[07] ONLP_LED_FAN_TRAY3
+ *            |----[07] ONLP_FAN_7----[08] ONLP_LED_FAN_TRAY4
+ *            |----[08] ONLP_FAN_8----[08] ONLP_LED_FAN_TRAY4
+ *            |
+ *            |----[01] ONLP_PSU_1----[12] ONLP_THERMAL_PSU1_1
+ *            |                  |----[13] ONLP_THERMAL_PSU1_2
+ *            |                  |----[09] ONLP_PSU1_FAN_1
+ *            |
+ *            |----[02] ONLP_PSU_2----[14] ONLP_THERMAL_PSU2_1
+ *            |                  |----[15] ONLP_THERMAL_PSU2_2
+ *            |                  |----[10] ONLP_PSU2_FAN_1
+ *            |
+ *            |----[01] ONLP_LED_SYSTEM
+ *            |----[02] ONLP_LED_PSU1
+ *            |----[03] ONLP_LED_PSU2
+ *            |----[04] ONLP_LED_FAN
+ */
+static onlp_oid_t __onlp_oid_info[] = { 
+    ONLP_THERMAL_ID_CREATE(ONLP_THERMAL_FRONT_MAC),
+    ONLP_THERMAL_ID_CREATE(ONLP_THERMAL_REAR_MAC),
+    ONLP_THERMAL_ID_CREATE(ONLP_THERMAL_ASIC),
+    ONLP_THERMAL_ID_CREATE(ONLP_THERMAL_CPU1),
+    ONLP_THERMAL_ID_CREATE(ONLP_THERMAL_CPU2),
+    ONLP_THERMAL_ID_CREATE(ONLP_THERMAL_CPU3),
+    ONLP_THERMAL_ID_CREATE(ONLP_THERMAL_CPU4),
+    ONLP_THERMAL_ID_CREATE(ONLP_THERMAL_CPU_BOARD),
+    ONLP_THERMAL_ID_CREATE(ONLP_THERMAL_PSU1_NEAR),
+    ONLP_THERMAL_ID_CREATE(ONLP_THERMAL_PSU2_NEAR),
+    ONLP_THERMAL_ID_CREATE(ONLP_THERMAL_QSFP_NEAR),
+    //ONLP_THERMAL_ID_CREATE(ONLP_THERMAL_PSU1_1),
+    //ONLP_THERMAL_ID_CREATE(ONLP_THERMAL_PSU1_2),
+    //ONLP_THERMAL_ID_CREATE(ONLP_THERMAL_PSU2_1),
+    //ONLP_THERMAL_ID_CREATE(ONLP_THERMAL_PSU2_2),
+    ONLP_FAN_ID_CREATE(ONLP_FAN_1),
+    ONLP_FAN_ID_CREATE(ONLP_FAN_2),
+    ONLP_FAN_ID_CREATE(ONLP_FAN_3),
+    ONLP_FAN_ID_CREATE(ONLP_FAN_4),
+    ONLP_FAN_ID_CREATE(ONLP_FAN_5),
+    ONLP_FAN_ID_CREATE(ONLP_FAN_6),
+    ONLP_FAN_ID_CREATE(ONLP_FAN_7),
+    ONLP_FAN_ID_CREATE(ONLP_FAN_8),
+    //ONLP_FAN_ID_CREATE(ONLP_PSU1_FAN_1),
+    //ONLP_FAN_ID_CREATE(ONLP_PSU2_FAN_1),
+    ONLP_PSU_ID_CREATE(ONLP_PSU_1),
+    ONLP_PSU_ID_CREATE(ONLP_PSU_2),
+    ONLP_LED_ID_CREATE(ONLP_LED_SYSTEM),
+    ONLP_LED_ID_CREATE(ONLP_LED_PSU1),
+    ONLP_LED_ID_CREATE(ONLP_LED_PSU2),
+    ONLP_LED_ID_CREATE(ONLP_LED_FAN),
+    //ONLP_LED_ID_CREATE(ONLP_LED_FAN_TRAY1), //connect behind ONLP_FAN_1,2
+    //ONLP_LED_ID_CREATE(ONLP_LED_FAN_TRAY2), //connect behind ONLP_FAN_3,4
+    //ONLP_LED_ID_CREATE(ONLP_LED_FAN_TRAY3), //connect behind ONLP_FAN_5,6
+    //ONLP_LED_ID_CREATE(ONLP_LED_FAN_TRAY4), //connect behind ONLP_FAN_7,8
+};
+
+static onlp_oid_t __onlp_oid_info_bmc[] = { 
+    //ONLP_THERMAL_ID_CREATE(ONLP_THERMAL_FRONT_MAC),
+    //ONLP_THERMAL_ID_CREATE(ONLP_THERMAL_REAR_MAC),
+    //ONLP_THERMAL_ID_CREATE(ONLP_THERMAL_ASIC),
+    ONLP_THERMAL_ID_CREATE(ONLP_THERMAL_CPU1),
+    ONLP_THERMAL_ID_CREATE(ONLP_THERMAL_CPU2),
+    ONLP_THERMAL_ID_CREATE(ONLP_THERMAL_CPU3),
+    ONLP_THERMAL_ID_CREATE(ONLP_THERMAL_CPU4),
+    ONLP_THERMAL_ID_CREATE(ONLP_THERMAL_CPU_BOARD),
+    //ONLP_THERMAL_ID_CREATE(ONLP_THERMAL_PSU1_NEAR),
+    //ONLP_THERMAL_ID_CREATE(ONLP_THERMAL_PSU2_NEAR),
+    //ONLP_THERMAL_ID_CREATE(ONLP_THERMAL_QSFP_NEAR),
+    //ONLP_THERMAL_ID_CREATE(ONLP_THERMAL_PSU1_1),
+    //ONLP_THERMAL_ID_CREATE(ONLP_THERMAL_PSU1_2),
+    //ONLP_THERMAL_ID_CREATE(ONLP_THERMAL_PSU2_1),
+    //ONLP_THERMAL_ID_CREATE(ONLP_THERMAL_PSU2_2),
+    //ONLP_FAN_ID_CREATE(ONLP_FAN_1),
+    //ONLP_FAN_ID_CREATE(ONLP_FAN_2),
+    //ONLP_FAN_ID_CREATE(ONLP_FAN_3),
+    //ONLP_FAN_ID_CREATE(ONLP_FAN_4),
+    //ONLP_FAN_ID_CREATE(ONLP_FAN_5),
+    //ONLP_FAN_ID_CREATE(ONLP_FAN_6),
+    //ONLP_FAN_ID_CREATE(ONLP_FAN_7),
+    //ONLP_FAN_ID_CREATE(ONLP_FAN_8),
+    //ONLP_FAN_ID_CREATE(ONLP_PSU1_FAN_1),
+    //ONLP_FAN_ID_CREATE(ONLP_PSU2_FAN_1),
+    //ONLP_PSU_ID_CREATE(ONLP_PSU_1),
+    //ONLP_PSU_ID_CREATE(ONLP_PSU_2),
+    ONLP_LED_ID_CREATE(ONLP_LED_SYSTEM),
+    ONLP_LED_ID_CREATE(ONLP_LED_PSU1),
+    ONLP_LED_ID_CREATE(ONLP_LED_PSU2),
+    ONLP_LED_ID_CREATE(ONLP_LED_FAN),
+    //ONLP_LED_ID_CREATE(ONLP_LED_FAN_TRAY1), //connect behind ONLP_FAN_1,2
+    //ONLP_LED_ID_CREATE(ONLP_LED_FAN_TRAY2), //connect behind ONLP_FAN_3,4
+    //ONLP_LED_ID_CREATE(ONLP_LED_FAN_TRAY3), //connect behind ONLP_FAN_5,6
+    //ONLP_LED_ID_CREATE(ONLP_LED_FAN_TRAY4), //connect behind ONLP_FAN_7,8
+};
+
 /**
  * @brief Software initializaiton of the Chassis module.
  */
 int onlp_chassisi_sw_init(void)
 {
+    if (BMC_ENABLE < 0) {
+        set_bmc_enable_flag();
+    }
+
     return ONLP_STATUS_OK;
 }
 
@@ -60,5 +178,23 @@ int onlp_chassisi_sw_denit(void)
  */
 int onlp_chassisi_hdr_get(onlp_oid_id_t id, onlp_oid_hdr_t* hdr)
 {
+    int i;
+    onlp_oid_t* e;
+    ONLP_OID_STATUS_FLAG_SET(hdr, PRESENT);
+    ONLP_OID_STATUS_FLAG_SET(hdr, OPERATIONAL);
+
+    if (BMC_ENABLE) {
+        memcpy(hdr->coids, __onlp_oid_info_bmc, sizeof(__onlp_oid_info_bmc));
+        e = hdr->coids + AIM_ARRAYSIZE(__onlp_oid_info_bmc);
+    } else {
+        memcpy(hdr->coids, __onlp_oid_info, sizeof(__onlp_oid_info));
+        e = hdr->coids + AIM_ARRAYSIZE(__onlp_oid_info);
+    }
+
+    /* 32 QSFP */
+    for(i = 1; i <= 32; i++) {
+        *e++ = ONLP_SFP_ID_CREATE(i);
+    }
+
     return ONLP_STATUS_OK;
 }

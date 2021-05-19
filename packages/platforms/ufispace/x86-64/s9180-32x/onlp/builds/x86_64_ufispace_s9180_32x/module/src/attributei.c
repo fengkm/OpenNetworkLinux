@@ -78,12 +78,7 @@ typedef struct sysi_onie_vpd_s {
     char file[ONLP_CONFIG_INFO_STR_MAX*2];
 } sysi_onie_vpd_t;
 
-
 #define CMD_BIOS_VER  "dmidecode -s bios-version | tail -1 | tr -d '\r\n'"
-#define CMD_BMC_VER_1 "expr `ipmitool mc info | grep 'Firmware Revision' | cut -d':' -f2 | cut -d'.' -f1` + 0"
-#define CMD_BMC_VER_2 "expr `ipmitool mc info | grep 'Firmware Revision' | cut -d':' -f2 | cut -d'.' -f2` + 0"
-#define CMD_BMC_VER_3 "echo $((`ipmitool mc info | grep 'Aux Firmware Rev Info' -A 2 | sed -n '2p'`))"
-#define CMD_UCD_VER   "ipmitool raw 0x3c 0x08"
 
 static int _sysi_onie_product_name_get(char** product_name);
 static int _sysi_onie_part_number_get(char** part_number);
@@ -868,8 +863,7 @@ static int _sysi_onie_info_total_len_get(onlp_onie_info_t *onie, uint16_t *total
 
 
 
-const char*
-onlp_sysi_platform_get(void)
+const char* onlp_sysi_platform_get(void)
 {
     return "x86-64-ufispace-s9180-32x-r0";
 }
@@ -889,8 +883,7 @@ onlp_sysi_platform_get(void)
  * return UNSUPPORTED (which is all the default implementation does).
  *
  */
-int
-onlp_sysi_onie_data_phys_addr_get(void** pa)
+int onlp_sysi_onie_data_phys_addr_get(void** pa)
 {
     return ONLP_STATUS_E_UNSUPPORTED;
 }
@@ -903,8 +896,7 @@ onlp_sysi_onie_data_phys_addr_get(void** pa)
  * This function will be called as a backup in the event that
  * onlp_sysi_onie_data_phys_addr_get() fails.
  */
-int
-onlp_sysi_onie_data_get(uint8_t** data, int* size)
+int onlp_sysi_onie_data_get(uint8_t** data, int* size)
 {
 #if 0
     int ret;
@@ -1009,11 +1001,58 @@ static int __onlp_sysi_onie_info_get (onlp_onie_info_t *onie_info)
     return ret;
 }
 
+static int __asset_versions(onlp_oid_t oid, onlp_asset_info_t* asset_info)
+{
+    //int cpld_release = 0;
+    int cpld_version = 0; 
+    char bios_out[32] = "";
+    onlp_onie_info_t onie_info;
+
+    //Get CPLD Version
+    cpld_version = onlp_i2c_readb(44, 0x33, 0x01, ONLP_I2C_F_FORCE);
+    if (cpld_version < 0) { 
+        AIM_LOG_ERROR("unable to read CPLD version\n");
+        return ONLP_STATUS_E_INTERNAL;
+    }
+
+    //cpld_release = (((cpld_version) >> 6 & 0x01));
+    cpld_version = (((cpld_version) & 0x3F));
+
+    asset_info->cpld_revision = aim_fstrdup("0x%02x\n", cpld_version);
+
+    //Get BIOS version
+    if (exec_cmd(CMD_BIOS_VER, bios_out, sizeof(bios_out)) < 0) { 
+        AIM_LOG_ERROR("unable to read BIOS version\n");
+        return ONLP_STATUS_E_INTERNAL;
+    }    
+
+    asset_info->firmware_revision = aim_fstrdup(
+            "\n" 
+            "    [BIOS] %s\n",
+            bios_out);
+
+
+    /* get platform info from onie syseeprom */
+    onlp_attributei_onie_info_get(oid, &onie_info);
+
+    asset_info->oid = oid;
+    ONIE_FIELD_CPY(asset_info, onie_info, manufacturer)
+    ONIE_FIELD_CPY(asset_info, onie_info, part_number)
+    ONIE_FIELD_CPY(asset_info, onie_info, serial_number)
+    ONIE_FIELD_CPY(asset_info, onie_info, manufacture_date)
+
+    return ONLP_STATUS_OK;
+}
+
 /**
  * @brief Initialize the attribute subsystem.
  */
 int onlp_attributei_sw_init(void)
 {
+    if (BMC_ENABLE < 0) {
+        set_bmc_enable_flag();
+    }
+
     return ONLP_STATUS_OK;
 }
 
@@ -1065,5 +1104,17 @@ int onlp_attributei_onie_info_get(onlp_oid_t oid, onlp_onie_info_t* onie_info)
  */
 int onlp_attributei_asset_info_get(onlp_oid_t oid, onlp_asset_info_t* asset_info)
 {
+    if(oid != ONLP_OID_CHASSIS) {
+        return ONLP_STATUS_E_UNSUPPORTED;
+    }    
+
+    if(asset_info == NULL) {
+        return ONLP_STATUS_OK;
+    }    
+
+    asset_info->oid = oid; 
+
+    __asset_versions(oid, asset_info);
+
     return ONLP_STATUS_OK;
 }
