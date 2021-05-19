@@ -70,6 +70,8 @@
 #define REG_MB_BRD_ID_0                   (REG_BASE_MB + 0x00)
 #define REG_MB_BRD_ID_1                   (REG_BASE_MB + 0x01)
 #define REG_MB_CPLD_VERSION               (REG_BASE_MB + 0x02)
+#define REG_MB_MUX_RESET                  (REG_BASE_MB + 0x46)
+#define REG_MB_MISC_RESET                 (REG_BASE_MB + 0x48)
 #define REG_MB_MUX_CTRL                   (REG_BASE_MB + 0x5C)
 
 //I2C Alert
@@ -100,6 +102,7 @@ enum lpc_sysfs_attributes {
     ATT_MB_BRD_ID_TYPE,
     ATT_MB_BRD_BUILD_ID,
     ATT_MB_BRD_DEPH_ID,
+    ATT_MB_MUX_RESET,
     //I2C Alert
     ATT_ALERT_STATUS,
 #if CPU_TYPE == CPU_BDE
@@ -356,6 +359,54 @@ static ssize_t write_lpc_callback(struct device *dev,
     return write_lpc_reg(reg, mask, buf, count);
 }
 
+/* set mux_reset register value */
+static ssize_t write_mux_reset(struct device *dev,
+        struct device_attribute *da, const char *buf, size_t count)
+{
+    u8 val = 0;
+    u8 mux_reset_reg_val = 0;
+    u8 misc_reset_reg_val = 0;
+    static int mux_reset_flag = 0;
+
+    if (kstrtou8(buf, 0, &val) < 0)
+        return -EINVAL;
+
+    if (mux_reset_flag == 0) {
+        if (val == 0) {
+            mutex_lock(&lpc_data->access_lock);
+            mux_reset_flag = 1;
+            printk(KERN_INFO "i2c mux reset is triggered...\n");
+
+            //reset mux on NIF ports
+            mux_reset_reg_val = inb(REG_MB_MUX_RESET);
+            outb((mux_reset_reg_val & 0b11100000), REG_MB_MUX_RESET);
+
+            //reset mux on top board (FAB ports)
+            misc_reset_reg_val = inb(REG_MB_MISC_RESET);
+            outb((misc_reset_reg_val & 0b11011111), REG_MB_MISC_RESET);
+
+            mdelay(100);
+
+            //unset mux on NIF ports
+            outb((mux_reset_reg_val | 0b00011111), REG_MB_MUX_RESET);
+            //unset mux on top board (FAB ports)
+            outb((misc_reset_reg_val | 0b00100000), REG_MB_MISC_RESET);
+
+            mdelay(500);
+            mux_reset_flag = 0;
+            mutex_unlock(&lpc_data->access_lock);
+        } else {
+            return -EINVAL;
+        }
+    } else {
+        printk(KERN_INFO "i2c mux is resetting... (ignore)\n");
+        mutex_lock(&lpc_data->access_lock);
+        mutex_unlock(&lpc_data->access_lock);
+    }
+
+    return count;
+}
+
 /* get bsp parameter value */
 static ssize_t read_bsp_callback(struct device *dev,
         struct device_attribute *da, char *buf)
@@ -430,6 +481,7 @@ static SENSOR_DEVICE_ATTR(board_hw_id,       S_IRUGO, read_lpc_callback, NULL, A
 static SENSOR_DEVICE_ATTR(board_id_type,     S_IRUGO, read_lpc_callback, NULL, ATT_MB_BRD_ID_TYPE);
 static SENSOR_DEVICE_ATTR(board_build_id,    S_IRUGO, read_lpc_callback, NULL, ATT_MB_BRD_BUILD_ID);
 static SENSOR_DEVICE_ATTR(board_deph_id,     S_IRUGO, read_lpc_callback, NULL, ATT_MB_BRD_DEPH_ID);
+static SENSOR_DEVICE_ATTR(mux_reset,         S_IWUSR, NULL, write_mux_reset, ATT_MB_MUX_RESET);
 //SENSOR_DEVICE_ATTR - I2C Alert
 static SENSOR_DEVICE_ATTR(alert_status,    S_IRUGO, read_lpc_callback, NULL, ATT_ALERT_STATUS);
 #if CPU_TYPE == CPU_BDE
@@ -457,6 +509,7 @@ static struct attribute *mb_cpld_attrs[] = {
     &sensor_dev_attr_board_build_id.dev_attr.attr,
     &sensor_dev_attr_board_deph_id.dev_attr.attr,
     &sensor_dev_attr_mux_ctrl.dev_attr.attr,
+    &sensor_dev_attr_mux_reset.dev_attr.attr,
     NULL,
 };
 
