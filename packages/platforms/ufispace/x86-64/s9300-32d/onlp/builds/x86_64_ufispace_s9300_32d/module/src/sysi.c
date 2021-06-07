@@ -134,7 +134,6 @@ onlp_sysi_oids_get(onlp_oid_t* table, int max)
         *e++ = THERMAL_OID_CPU6;
         *e++ = THERMAL_OID_CPU7;
         *e++ = THERMAL_OID_CPU8;
-        *e++ = THERMAL_OID_CPU_BOARD;
         
         *e++ = LED_OID_SYSTEM;        
         *e++ = LED_OID_PSU0;

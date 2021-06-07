@@ -59,7 +59,7 @@
  
 #define SYS_EEPROM_PATH    "/sys/bus/i2c/devices/1-0057/eeprom"
 #define SYS_EEPROM_SIZE    512
-#define SYSFS_CPLD_VER_H  LPC_FMT "mb_cpld_version_h"
+#define SYSFS_CPLD_VER_H  LPC_FMT "cpld_version_h"
 #define SYSFS_HW_ID  LPC_FMT "board_hw_id"
 #define SYSFS_BUILD_ID  LPC_FMT "board_build_id"
 

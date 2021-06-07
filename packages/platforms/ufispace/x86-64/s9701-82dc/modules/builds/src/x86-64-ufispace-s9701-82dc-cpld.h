@@ -1,4 +1,4 @@
-/* header file for i2c cpld driver of ufispace_s9701
+/* header file for i2c cpld driver of ufispace_s9701_82dc
  *
  * Copyright (C) 2017 UfiSpace Technology Corporation.
  * Leo Lin <leo.yt.lin@ufispace.com>
@@ -163,23 +163,31 @@ enum cpld_id {
 /* CPLD 4 */
 // Interrupt status
 #define CPLD_QSFP_PORT_64_71_INTR_REG       0x10
+#define CPLD_QSFP_PORT_72_75_INTR_REG       0x11
 #define CPLD_QSFPDD_PORT_INTR_REG           0x12
 #define CPLD_QSFP_PORT_64_71_PRES_REG       0x14
+#define CPLD_QSFP_PORT_72_75_PRES_REG       0x15
 #define CPLD_QSFPDD_PORT_0_5_PRES_REG       0x16
 // Interrupt mask
 #define CPLD_QSFP_PORT_64_71_INTR_MASK_REG  0x20
+#define CPLD_QSFP_PORT_72_75_INTR_MASK_REG  0x21
 #define CPLD_QSFPDD_PORT_INTR_MASK_REG      0x22
 #define CPLD_QSFP_PORT_64_71_PRES_MASK_REG  0x24
+#define CPLD_QSFP_PORT_72_75_PRES_MASK_REG  0x25
 #define CPLD_QSFPDD_PORT_0_5_PRES_MASK_REG  0x26
 // Interrupt event
 #define CPLD_QSFP_PORT_64_71_INTR_EVENT_REG 0x30
+#define CPLD_QSFP_PORT_72_75_INTR_EVENT_REG 0x31
 #define CPLD_QSFPDD_PORT_INTR_EVENT_REG     0x32
 #define CPLD_QSFP_PORT_64_71_PLUG_EVENT_REG 0x34
+#define CPLD_QSFP_PORT_72_75_PLUG_EVENT_REG 0x35
 #define CPLD_QSFPDD_PORT_0_5_PLUG_EVENT_REG 0x36
 // Port ctrl
 #define CPLD_QSFP_PORT_64_71_RST_REG        0x40
+#define CPLD_QSFP_PORT_72_75_RST_REG        0x41
 #define CPLD_QSFPDD_PORT_RST_REG            0x42
 #define CPLD_QSFP_PORT_64_71_LPMODE_REG     0x46
+#define CPLD_QSFP_PORT_72_75_LPMODE_REG     0x47
 #define CPLD_QSFPDD_PORT_LPMODE_REG         0x48
 // Port led ctrl
 #define CPLD_QSFPDD_PORT_0_1_LED_REG        0x8C

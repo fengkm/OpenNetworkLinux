@@ -22,25 +22,10 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
-#include <linux/interrupt.h>
 #include <linux/module.h>
-#include <linux/pci.h>
-#include <linux/kernel.h>
-#include <linux/stddef.h>
 #include <linux/delay.h>
-#include <linux/ioport.h>
-#include <linux/init.h>
-#include <linux/i2c.h>
-#include <linux/acpi.h>
 #include <linux/io.h>
-#include <linux/dmi.h>
-#include <linux/slab.h>
-#include <linux/wait.h>
-#include <linux/err.h>
 #include <linux/platform_device.h>
-#include <linux/types.h>
-#include <uapi/linux/stat.h>
-#include <linux/hwmon.h>
 #include <linux/hwmon-sysfs.h>
 
 #define DRIVER_NAME "x86_64_ufispace_s9510_28dc_lpc"
@@ -497,16 +482,15 @@ static ssize_t write_bsp_callback(struct device *dev,
 static ssize_t read_mux_rest_all_callback(struct device *dev,
         struct device_attribute *da, char *buf)
 {
-    struct sensor_device_attribute *attr = to_sensor_dev_attr(da);
     u8 len = 0;
     u8 reg_val = 0;
 
     reg_val = _read_lpc_reg(REG_MUX_RESET, MASK_ALL);
     
     if(reg_val > 0){
-        len = scnprintf(buf,"%u\n", 1);
+        len = scnprintf(buf,3,"%u\n", 1);
     }else{
-        len = scnprintf(buf,"%u\n", 0);
+        len = scnprintf(buf,3,"%u\n", 0);
     }
     return len;
 }
@@ -515,7 +499,6 @@ static ssize_t read_mux_rest_all_callback(struct device *dev,
 static ssize_t write_mux_reset_all_callback(struct device *dev,
         struct device_attribute *da, const char *buf, size_t count)
 {
-    struct sensor_device_attribute *attr = to_sensor_dev_attr(da);
     static int cpu_mux_reset_flag = 0;
     u8 reg_val = 0;
 
@@ -579,7 +562,7 @@ static SENSOR_DEVICE_ATTR(uart_ctrl,         S_IRUGO | S_IWUSR, read_lpc_callbac
 static SENSOR_DEVICE_ATTR(usb_ctrl,          S_IRUGO | S_IWUSR, read_lpc_callback, write_lpc_callback, ATT_USB_CTRL);
 static SENSOR_DEVICE_ATTR(mux_ctrl,          S_IRUGO, read_lpc_callback, NULL, ATT_MUX_CTRL);
 static SENSOR_DEVICE_ATTR(led_clr,           S_IRUGO | S_IWUSR, read_lpc_callback, write_lpc_callback, ATT_LED_CLR);
-//FIXME: remove write operation
+//FIXME: remove write operation, remove write after validation
 static SENSOR_DEVICE_ATTR(led_ctrl_1,   S_IRUGO | S_IWUSR, read_lpc_callback, write_lpc_callback, ATT_LED_CTRL_1);
 static SENSOR_DEVICE_ATTR(led_ctrl_2,   S_IRUGO | S_IWUSR, read_lpc_callback, write_lpc_callback, ATT_LED_CTRL_2);
 static SENSOR_DEVICE_ATTR(led_status_1, S_IRUGO | S_IWUSR, read_lpc_callback, NULL, ATT_LED_STATUS_1);

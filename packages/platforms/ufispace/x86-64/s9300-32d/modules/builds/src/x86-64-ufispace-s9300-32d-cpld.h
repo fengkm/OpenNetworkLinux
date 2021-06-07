@@ -1,4 +1,4 @@
-/* header file for i2c cpld driver of ufispace_s9300
+/* header file for i2c cpld driver of ufispace_s9300_32d
  *
  * Copyright (C) 2017 UfiSpace Technology Corporation.
  * Leo Lin <leo.yt.lin@ufispace.com>
@@ -68,6 +68,7 @@ enum LED_GREEN {
 #define CPLD_HW_REV_REG	                    0x01
 #define CPLD_VERSION_REG                    0x02
 #define CPLD_ID_REG                         0x03
+#define CPLD_BUILD_VER_REG                  0x04
 // Interrupt status
 #define CPLD_MAC_INTR_REG                   0x10
 #define CPLD_10G_PHY_INTR_REG               0x13

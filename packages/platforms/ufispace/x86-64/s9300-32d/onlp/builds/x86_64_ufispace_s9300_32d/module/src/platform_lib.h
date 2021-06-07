@@ -39,8 +39,6 @@
 #define SYS_CPU_CORETEMP_PREFIX         "/sys/devices/platform/coretemp.0/hwmon/hwmon0/"
 #define SYS_CPU_CORETEMP_PREFIX2      "/sys/devices/platform/coretemp.0/"
 #define SYS_CORE_TEMP_PREFIX        "/sys/class/hwmon/hwmon2/"
-#define SYS_CPU_BOARD_TEMP_PREFIX   "/sys/bus/i2c/devices/0-004f/hwmon/hwmon1/"
-#define SYS_CPU_BOARD_TEMP_PREFIX2   "/sys/bus/i2c/devices/0-004f/"
 
 #define SYS_EEPROM_PATH             "/sys/bus/i2c/devices/0-0057/eeprom"
 #define SYS_EEPROM_SIZE 512
@@ -52,7 +50,9 @@
 #define MB_CPLD3_SYSFS_PATH    "/sys/bus/i2c/devices/2-0032"
 #define MB_CPLDX_SYSFS_PATH    "/sys/bus/i2c/devices/2-00%02x"
 #define MB_CPLD_ID_ATTR                 "cpld_id"
-#define MB_CPLD_VER_ATTR                 "cpld_version"
+#define MB_CPLD_MAJOR_VER_ATTR                 "cpld_major_ver"
+#define MB_CPLD_MINOR_VER_ATTR                 "cpld_minor_ver"
+#define MB_CPLD_BUILD_VER_ATTR                  "cpld_build_ver"
 #define MB_CPLD_SFP_RXLOS_ATTR  "cpld_sfp_rxlos"
 #define MB_CPLD_SFP_TXFLT_ATTR  "cpld_sfp_txfault"
 #define MB_CPLD_SFP_TXDIS_ATTR  "cpld_sfp_tx_dis"
@@ -134,10 +134,10 @@
 #define SFP_BASE_BUS        13
 
 /* PSU */
-#define PSU1_PRESENT_MASK       0b01000000
-#define PSU2_PRESENT_MASK       0b10000000
-#define PSU1_PWGOOD_MASK        0b00010000
-#define PSU2_PWGOOD_MASK        0b00100000
+#define PSU1_PRESENT_MASK       0b00000100
+#define PSU2_PRESENT_MASK       0b00001000
+#define PSU1_PWGOOD_MASK        0b00000001
+#define PSU2_PWGOOD_MASK        0b00000010
 #define PSU_STATUS_PRESENT          1
 #define PSU_STATUS_POWER_GOOD       1
 
@@ -211,7 +211,6 @@ typedef enum thermal_oid_e {
     THERMAL_OID_CPU6 = ONLP_THERMAL_ID_CREATE(15), 
     THERMAL_OID_CPU7 = ONLP_THERMAL_ID_CREATE(16), 
     THERMAL_OID_CPU8 = ONLP_THERMAL_ID_CREATE(17),
-    THERMAL_OID_CPU_BOARD = ONLP_THERMAL_ID_CREATE(18),
 } thermal_oid_t;
 
 /** thermal_id */
@@ -233,8 +232,7 @@ typedef enum thermal_id_e {
     THERMAL_ID_CPU6 = 15,
     THERMAL_ID_CPU7 = 16,
     THERMAL_ID_CPU8 = 17,
-    THERMAL_ID_CPU_BOARD = 18,
-    THERMAL_ID_MAX = 19,
+    THERMAL_ID_MAX = 18,
 } thermal_id_t;
 
 typedef enum bmc_cache_idx_e {

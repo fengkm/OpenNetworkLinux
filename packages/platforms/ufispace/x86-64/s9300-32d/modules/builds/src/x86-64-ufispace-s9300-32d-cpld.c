@@ -1,5 +1,5 @@
 /*
- * A i2c cpld driver for the ufispace_s9300
+ * A i2c cpld driver for the ufispace_s9300_32d
  *
  * Copyright (C) 2017-2019 UfiSpace Technology Corporation.
  * Jason Tsai <jason.cy.tsai@ufispace.com>
@@ -65,6 +65,7 @@ enum s9300_cpld_sysfs_attributes {
     CPLD_ID_TYPE,
     CPLD_MAJOR_VER,
     CPLD_MINOR_VER,
+    CPLD_BUILD_VER,
     CPLD_ID,
     CPLD_MAC_INTR,
     CPLD_10G_PHY_INTR,
@@ -227,6 +228,8 @@ static SENSOR_DEVICE_ATTR(cpld_major_ver, S_IRUGO, \
         read_cpld_version_cb, NULL, CPLD_MAJOR_VER);
 static SENSOR_DEVICE_ATTR(cpld_minor_ver, S_IRUGO, \
         read_cpld_version_cb, NULL, CPLD_MINOR_VER);
+static SENSOR_DEVICE_ATTR(cpld_build_ver, S_IRUGO, \
+        read_cpld_callback, NULL, CPLD_BUILD_VER);
 static SENSOR_DEVICE_ATTR(cpld_id, S_IRUGO, \
         read_cpld_callback, NULL, CPLD_ID);
 static SENSOR_DEVICE_ATTR(cpld_mac_intr, S_IRUGO, \
@@ -439,6 +442,7 @@ static struct attribute *s9300_cpld1_attributes[] = {
     &sensor_dev_attr_cpld_id_type.dev_attr.attr,
     &sensor_dev_attr_cpld_major_ver.dev_attr.attr,
     &sensor_dev_attr_cpld_minor_ver.dev_attr.attr,
+    &sensor_dev_attr_cpld_build_ver.dev_attr.attr,
     &sensor_dev_attr_cpld_id.dev_attr.attr,
     &sensor_dev_attr_cpld_mac_intr.dev_attr.attr,
     &sensor_dev_attr_cpld_10g_phy_intr.dev_attr.attr,
@@ -482,6 +486,7 @@ static struct attribute *s9300_cpld2_attributes[] = {
     &sensor_dev_attr_cpld_register_value.dev_attr.attr,
     &sensor_dev_attr_cpld_major_ver.dev_attr.attr,
     &sensor_dev_attr_cpld_minor_ver.dev_attr.attr,
+    &sensor_dev_attr_cpld_build_ver.dev_attr.attr,
     &sensor_dev_attr_cpld_id.dev_attr.attr,
     &sensor_dev_attr_cpld_qsfpdd_mod_int_g0.dev_attr.attr,
     &sensor_dev_attr_cpld_qsfpdd_mod_int_g1.dev_attr.attr,
@@ -549,6 +554,7 @@ static struct attribute *s9300_cpld3_attributes[] = {
     &sensor_dev_attr_cpld_register_value.dev_attr.attr,
     &sensor_dev_attr_cpld_major_ver.dev_attr.attr,
     &sensor_dev_attr_cpld_minor_ver.dev_attr.attr,
+    &sensor_dev_attr_cpld_build_ver.dev_attr.attr,
     &sensor_dev_attr_cpld_id.dev_attr.attr,
     NULL
 };
@@ -690,6 +696,9 @@ static ssize_t read_cpld_callback(struct device *dev,
              break;
         case CPLD_ID:
              reg = CPLD_ID_REG;
+             break;
+        case CPLD_BUILD_VER:
+             reg = CPLD_BUILD_VER_REG;
              break;
         case CPLD_MAC_INTR:
              reg = CPLD_MAC_INTR_REG;

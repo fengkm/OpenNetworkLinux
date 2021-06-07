@@ -1,5 +1,5 @@
 /*
- * A i2c cpld driver for the ufispace_s9701
+ * A i2c cpld driver for the ufispace_s9701_82dc
  *
  * Copyright (C) 2017-2019 UfiSpace Technology Corporation.
  * Jason Tsai <jason.cy.tsai@ufispace.com>
@@ -157,20 +157,28 @@ enum s9701_cpld_sysfs_attributes {
     CPLD_SFP_PORT_48_55_TX_DISABLE,
     CPLD_SFP_PORT_56_63_TX_DISABLE,
     CPLD_QSFP_PORT_64_71_INTR,
+    CPLD_QSFP_PORT_72_75_INTR,
     CPLD_QSFPDD_PORT_INTR,
     CPLD_QSFP_PORT_64_71_PRES,
+    CPLD_QSFP_PORT_72_75_PRES,
     CPLD_QSFPDD_PORT_0_5_PRES,
     CPLD_QSFP_PORT_64_71_INTR_MASK,
+    CPLD_QSFP_PORT_72_75_INTR_MASK,
     CPLD_QSFPDD_PORT_INTR_MASK,
     CPLD_QSFP_PORT_64_71_PRES_MASK,
+    CPLD_QSFP_PORT_72_75_PRES_MASK,
     CPLD_QSFPDD_PORT_0_5_PRES_MASK,
     CPLD_QSFP_PORT_64_71_INTR_EVENT,
+    CPLD_QSFP_PORT_72_75_INTR_EVENT,
     CPLD_QSFPDD_PORT_INTR_EVENT,
     CPLD_QSFP_PORT_64_71_PLUG_EVENT,
+    CPLD_QSFP_PORT_72_75_PLUG_EVENT,
     CPLD_QSFPDD_PORT_0_5_PLUG_EVENT,
     CPLD_QSFP_PORT_64_71_RST,
+    CPLD_QSFP_PORT_72_75_RST,
     CPLD_QSFPDD_PORT_RST,
     CPLD_QSFP_PORT_64_71_LPMODE,
+    CPLD_QSFP_PORT_72_75_LPMODE,
     CPLD_QSFPDD_PORT_LPMODE,
     CPLD_BEACON_LED,
     CPLD_QSFPDD_PORT_0_1_LED,
@@ -224,7 +232,7 @@ static const struct i2c_device_id s9701_cpld_id[] = {
     {}
 };
 
-/* Addresses scanned for s9701_cpld */
+/* Addresses scanned for s9701_82dc_cpld */
 static const unsigned short cpld_i2c_addr[] = { 0x30, 0x31, 0x32, 0x33, I2C_CLIENT_END };
 
 /* define all support register access of cpld in attribute */
@@ -430,34 +438,50 @@ static SENSOR_DEVICE_ATTR(cpld_sfp_port_56_63_tx_disable, S_IWUSR | S_IRUGO, \
         read_cpld_cb, write_cpld_cb, CPLD_SFP_PORT_56_63_TX_DISABLE);
 static SENSOR_DEVICE_ATTR(cpld_qsfp_port_64_71_intr, S_IRUGO, \
         read_cpld_cb, NULL, CPLD_QSFP_PORT_64_71_INTR);
+static SENSOR_DEVICE_ATTR(cpld_qsfp_port_72_75_intr, S_IRUGO, \
+        read_cpld_cb, NULL, CPLD_QSFP_PORT_72_75_INTR);
 static SENSOR_DEVICE_ATTR(cpld_qsfpdd_port_intr, S_IRUGO, \
         read_cpld_cb, NULL, CPLD_QSFPDD_PORT_INTR);
 static SENSOR_DEVICE_ATTR(cpld_qsfp_port_64_71_pres, S_IRUGO, \
         read_cpld_cb, NULL, CPLD_QSFP_PORT_64_71_PRES);
+static SENSOR_DEVICE_ATTR(cpld_qsfp_port_72_75_pres, S_IRUGO, \
+        read_cpld_cb, NULL, CPLD_QSFP_PORT_72_75_PRES);
 static SENSOR_DEVICE_ATTR(cpld_qsfpdd_port_0_5_pres, S_IRUGO, \
         read_cpld_cb, NULL, CPLD_QSFPDD_PORT_0_5_PRES);
 static SENSOR_DEVICE_ATTR(cpld_qsfp_port_64_71_intr_mask, S_IWUSR | S_IRUGO, \
         read_cpld_cb, write_cpld_cb, CPLD_QSFP_PORT_64_71_INTR_MASK);
+static SENSOR_DEVICE_ATTR(cpld_qsfp_port_72_75_intr_mask, S_IWUSR | S_IRUGO, \
+        read_cpld_cb, write_cpld_cb, CPLD_QSFP_PORT_72_75_INTR_MASK);
 static SENSOR_DEVICE_ATTR(cpld_qsfpdd_port_intr_mask, S_IWUSR | S_IRUGO, \
         read_cpld_cb, write_cpld_cb, CPLD_QSFPDD_PORT_INTR_MASK);
 static SENSOR_DEVICE_ATTR(cpld_qsfp_port_64_71_pres_mask, S_IWUSR | S_IRUGO, \
         read_cpld_cb, write_cpld_cb, CPLD_QSFP_PORT_64_71_PRES_MASK);
+static SENSOR_DEVICE_ATTR(cpld_qsfp_port_72_75_pres_mask, S_IWUSR | S_IRUGO, \
+        read_cpld_cb, write_cpld_cb, CPLD_QSFP_PORT_72_75_PRES_MASK);
 static SENSOR_DEVICE_ATTR(cpld_qsfpdd_port_0_5_pres_mask, S_IWUSR | S_IRUGO, \
         read_cpld_cb, write_cpld_cb, CPLD_QSFPDD_PORT_0_5_PRES_MASK);
 static SENSOR_DEVICE_ATTR(cpld_qsfp_port_64_71_intr_event, S_IRUGO, \
         read_cpld_cb, NULL, CPLD_QSFP_PORT_64_71_INTR_EVENT);
+static SENSOR_DEVICE_ATTR(cpld_qsfp_port_72_75_intr_event, S_IRUGO, \
+        read_cpld_cb, NULL, CPLD_QSFP_PORT_72_75_INTR_EVENT);
 static SENSOR_DEVICE_ATTR(cpld_qsfpdd_port_intr_event, S_IRUGO, \
         read_cpld_cb, NULL, CPLD_QSFPDD_PORT_INTR_EVENT);
 static SENSOR_DEVICE_ATTR(cpld_qsfp_port_64_71_plug_event, S_IRUGO, \
         read_cpld_cb, NULL, CPLD_QSFP_PORT_64_71_PLUG_EVENT);
+static SENSOR_DEVICE_ATTR(cpld_qsfp_port_72_75_plug_event, S_IRUGO, \
+        read_cpld_cb, NULL, CPLD_QSFP_PORT_72_75_PLUG_EVENT);
 static SENSOR_DEVICE_ATTR(cpld_qsfpdd_port_0_5_plug_event, S_IRUGO, \
         read_cpld_cb, NULL, CPLD_QSFPDD_PORT_0_5_PLUG_EVENT);
 static SENSOR_DEVICE_ATTR(cpld_qsfp_port_64_71_rst, S_IWUSR | S_IRUGO, \
         read_cpld_cb, write_cpld_cb, CPLD_QSFP_PORT_64_71_RST);
+static SENSOR_DEVICE_ATTR(cpld_qsfp_port_72_75_rst, S_IWUSR | S_IRUGO, \
+        read_cpld_cb, write_cpld_cb, CPLD_QSFP_PORT_72_75_RST);
 static SENSOR_DEVICE_ATTR(cpld_qsfpdd_port_rst, S_IWUSR | S_IRUGO, \
         read_cpld_cb, write_cpld_cb, CPLD_QSFPDD_PORT_RST);
 static SENSOR_DEVICE_ATTR(cpld_qsfp_port_64_71_lpmode, S_IWUSR | S_IRUGO, \
         read_cpld_cb, write_cpld_cb, CPLD_QSFP_PORT_64_71_LPMODE);
+static SENSOR_DEVICE_ATTR(cpld_qsfp_port_72_75_lpmode, S_IWUSR | S_IRUGO, \
+        read_cpld_cb, write_cpld_cb, CPLD_QSFP_PORT_72_75_LPMODE);
 static SENSOR_DEVICE_ATTR(cpld_qsfpdd_port_lpmode, S_IWUSR | S_IRUGO, \
         read_cpld_cb, write_cpld_cb, CPLD_QSFPDD_PORT_LPMODE);
 static SENSOR_DEVICE_ATTR(cpld_beacon_led, S_IWUSR | S_IRUGO, \
@@ -603,20 +627,28 @@ static struct attribute *s9701_cpld4_attributes[] = {
     &sensor_dev_attr_cpld_minor_ver.dev_attr.attr,
     &sensor_dev_attr_cpld_id.dev_attr.attr,
     &sensor_dev_attr_cpld_qsfp_port_64_71_intr.dev_attr.attr,
+    &sensor_dev_attr_cpld_qsfp_port_72_75_intr.dev_attr.attr,
     &sensor_dev_attr_cpld_qsfpdd_port_intr.dev_attr.attr,
     &sensor_dev_attr_cpld_qsfp_port_64_71_pres.dev_attr.attr,
+    &sensor_dev_attr_cpld_qsfp_port_72_75_pres.dev_attr.attr,
     &sensor_dev_attr_cpld_qsfpdd_port_0_5_pres.dev_attr.attr,
     &sensor_dev_attr_cpld_qsfp_port_64_71_intr_mask.dev_attr.attr,
+    &sensor_dev_attr_cpld_qsfp_port_72_75_intr_mask.dev_attr.attr,
     &sensor_dev_attr_cpld_qsfpdd_port_intr_mask.dev_attr.attr,
     &sensor_dev_attr_cpld_qsfp_port_64_71_pres_mask.dev_attr.attr,
+    &sensor_dev_attr_cpld_qsfp_port_72_75_pres_mask.dev_attr.attr,
     &sensor_dev_attr_cpld_qsfpdd_port_0_5_pres_mask.dev_attr.attr,
     &sensor_dev_attr_cpld_qsfp_port_64_71_intr_event.dev_attr.attr,
+    &sensor_dev_attr_cpld_qsfp_port_72_75_intr_event.dev_attr.attr,
     &sensor_dev_attr_cpld_qsfpdd_port_intr_event.dev_attr.attr,
     &sensor_dev_attr_cpld_qsfp_port_64_71_plug_event.dev_attr.attr,
+    &sensor_dev_attr_cpld_qsfp_port_72_75_plug_event.dev_attr.attr,
     &sensor_dev_attr_cpld_qsfpdd_port_0_5_plug_event.dev_attr.attr,
     &sensor_dev_attr_cpld_qsfp_port_64_71_rst.dev_attr.attr,
+    &sensor_dev_attr_cpld_qsfp_port_72_75_rst.dev_attr.attr,
     &sensor_dev_attr_cpld_qsfpdd_port_rst.dev_attr.attr,
     &sensor_dev_attr_cpld_qsfp_port_64_71_lpmode.dev_attr.attr,
+    &sensor_dev_attr_cpld_qsfp_port_72_75_lpmode.dev_attr.attr,
     &sensor_dev_attr_cpld_qsfpdd_port_lpmode.dev_attr.attr,
     &sensor_dev_attr_cpld_qsfpdd_port_0_1_led.dev_attr.attr,
     &sensor_dev_attr_cpld_qsfpdd_port_2_3_led.dev_attr.attr,
@@ -1040,11 +1072,17 @@ static ssize_t read_cpld_cb(struct device *dev,
         case CPLD_QSFP_PORT_64_71_INTR:
              reg = CPLD_QSFP_PORT_64_71_INTR_REG;
              break;
+        case CPLD_QSFP_PORT_72_75_INTR:
+             reg = CPLD_QSFP_PORT_72_75_INTR_REG;
+             break;
         case CPLD_QSFPDD_PORT_INTR:
              reg = CPLD_QSFPDD_PORT_INTR_REG;
              break;
         case CPLD_QSFP_PORT_64_71_PRES:
              reg = CPLD_QSFP_PORT_64_71_PRES_REG;
+             break;
+        case CPLD_QSFP_PORT_72_75_PRES:
+             reg = CPLD_QSFP_PORT_72_75_PRES_REG;
              break;
         case CPLD_QSFPDD_PORT_0_5_PRES:
              reg = CPLD_QSFPDD_PORT_0_5_PRES_REG;
@@ -1052,11 +1090,17 @@ static ssize_t read_cpld_cb(struct device *dev,
         case CPLD_QSFP_PORT_64_71_INTR_MASK:
              reg = CPLD_QSFP_PORT_64_71_INTR_MASK_REG;
              break;
+        case CPLD_QSFP_PORT_72_75_INTR_MASK:
+             reg = CPLD_QSFP_PORT_72_75_INTR_MASK_REG;
+             break;
         case CPLD_QSFPDD_PORT_INTR_MASK:
              reg = CPLD_QSFPDD_PORT_INTR_MASK_REG;
              break;
         case CPLD_QSFP_PORT_64_71_PRES_MASK:
              reg = CPLD_QSFP_PORT_64_71_PRES_MASK_REG;
+             break;
+        case CPLD_QSFP_PORT_72_75_PRES_MASK:
+             reg = CPLD_QSFP_PORT_72_75_PRES_MASK_REG;
              break;
         case CPLD_QSFPDD_PORT_0_5_PRES_MASK:
              reg = CPLD_QSFPDD_PORT_0_5_PRES_MASK_REG;
@@ -1064,11 +1108,17 @@ static ssize_t read_cpld_cb(struct device *dev,
         case CPLD_QSFP_PORT_64_71_INTR_EVENT:
              reg = CPLD_QSFP_PORT_64_71_INTR_EVENT_REG;
              break;
+        case CPLD_QSFP_PORT_72_75_INTR_EVENT:
+             reg = CPLD_QSFP_PORT_72_75_INTR_EVENT_REG;
+             break;
         case CPLD_QSFPDD_PORT_INTR_EVENT:
              reg = CPLD_QSFPDD_PORT_INTR_EVENT_REG;
              break;
         case CPLD_QSFP_PORT_64_71_PLUG_EVENT:
              reg = CPLD_QSFP_PORT_64_71_PLUG_EVENT_REG;
+             break;
+        case CPLD_QSFP_PORT_72_75_PLUG_EVENT:
+             reg = CPLD_QSFP_PORT_72_75_PLUG_EVENT_REG;
              break;
         case CPLD_QSFPDD_PORT_0_5_PLUG_EVENT:
              reg = CPLD_QSFPDD_PORT_0_5_PLUG_EVENT_REG;
@@ -1076,11 +1126,17 @@ static ssize_t read_cpld_cb(struct device *dev,
         case CPLD_QSFP_PORT_64_71_RST:
              reg = CPLD_QSFP_PORT_64_71_RST_REG;
              break;
+        case CPLD_QSFP_PORT_72_75_RST:
+             reg = CPLD_QSFP_PORT_72_75_RST_REG;
+             break;
         case CPLD_QSFPDD_PORT_RST:
              reg = CPLD_QSFPDD_PORT_RST_REG;
              break;
         case CPLD_QSFP_PORT_64_71_LPMODE:
              reg = CPLD_QSFP_PORT_64_71_LPMODE_REG;
+             break;
+        case CPLD_QSFP_PORT_72_75_LPMODE:
+             reg = CPLD_QSFP_PORT_72_75_LPMODE_REG;
              break;
         case CPLD_QSFPDD_PORT_LPMODE:
              reg = CPLD_QSFPDD_PORT_LPMODE_REG;
@@ -1257,6 +1313,9 @@ static ssize_t write_cpld_cb(struct device *dev,
         case CPLD_QSFP_PORT_64_71_INTR_MASK:
              reg = CPLD_QSFP_PORT_64_71_INTR_MASK_REG;
              break;
+        case CPLD_QSFP_PORT_72_75_INTR_MASK:
+             reg = CPLD_QSFP_PORT_72_75_INTR_MASK_REG;
+             break;
         case CPLD_QSFPDD_PORT_INTR_MASK:
              reg = CPLD_QSFPDD_PORT_INTR_MASK_REG;
              break;
@@ -1269,11 +1328,17 @@ static ssize_t write_cpld_cb(struct device *dev,
         case CPLD_QSFP_PORT_64_71_RST:
              reg = CPLD_QSFP_PORT_64_71_RST_REG;
              break;
+        case CPLD_QSFP_PORT_72_75_RST:
+             reg = CPLD_QSFP_PORT_72_75_RST_REG;
+             break;
         case CPLD_QSFPDD_PORT_RST:
              reg = CPLD_QSFPDD_PORT_RST_REG;
              break;
         case CPLD_QSFP_PORT_64_71_LPMODE:
              reg = CPLD_QSFP_PORT_64_71_LPMODE_REG;
+             break;
+        case CPLD_QSFP_PORT_72_75_LPMODE:
+             reg = CPLD_QSFP_PORT_72_75_LPMODE_REG;
              break;
         case CPLD_QSFPDD_PORT_LPMODE:
              reg = CPLD_QSFPDD_PORT_LPMODE_REG;
@@ -1599,7 +1664,7 @@ static void __exit s9701_cpld_exit(void)
 }
 
 MODULE_AUTHOR("Leo Lin <leo.yt.lin@ufispace.com>");
-MODULE_DESCRIPTION("s9701_cpld driver");
+MODULE_DESCRIPTION("s9701_82dc_cpld driver");
 MODULE_LICENSE("GPL");
 
 module_init(s9701_cpld_init);

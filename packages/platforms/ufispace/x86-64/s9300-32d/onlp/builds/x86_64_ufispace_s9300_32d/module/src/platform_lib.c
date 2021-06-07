@@ -663,7 +663,7 @@ sysi_platform_info_get(onlp_platform_info_t* pi)
 {
     char sysfs[128];
     uint8_t cpu_cpld_ver_h[32];
-    int cpld_ver, cpld_ver_major, cpld_ver_minor;
+    int cpld_ver_major, cpld_ver_minor, cpld_ver_build;
     char mb_cpld_ver_h[CPLD_MAX][16];
     char bios_ver_h[32];
     char bmc_ver[3][16];
@@ -692,15 +692,28 @@ sysi_platform_info_get(onlp_platform_info_t* pi)
     //get MB CPLD version from CPLD sysfs
     for(i=0; i<CPLD_MAX; ++i) {
         snprintf(sysfs, sizeof(sysfs), 
-                    MB_CPLDX_SYSFS_PATH"/"MB_CPLD_VER_ATTR, CPLD_BASE_ADDR+i);
-        if ((rc = file_read_hex(&cpld_ver, sysfs)) != ONLP_STATUS_OK) {
+                    MB_CPLDX_SYSFS_PATH"/"MB_CPLD_MAJOR_VER_ATTR, CPLD_BASE_ADDR+i);
+        if ((rc = file_read_hex(&cpld_ver_major, sysfs)) != ONLP_STATUS_OK) {
             AIM_LOG_ERROR("file_read_hex failed, error=%d, %s", rc, sysfs);
             return ONLP_STATUS_E_INTERNAL;
         }
-        cpld_ver_major = cpld_ver >> 6 & 0x01;
-        cpld_ver_minor = cpld_ver & 0x3F;
-        snprintf(mb_cpld_ver_h[i], sizeof(mb_cpld_ver_h[i]), "%d.%02d", 
-                    cpld_ver_major, cpld_ver_minor);
+
+        snprintf(sysfs, sizeof(sysfs), 
+                    MB_CPLDX_SYSFS_PATH"/"MB_CPLD_MINOR_VER_ATTR, CPLD_BASE_ADDR+i);
+        if ((rc = file_read_hex(&cpld_ver_minor, sysfs)) != ONLP_STATUS_OK) {
+            AIM_LOG_ERROR("file_read_hex failed, error=%d, %s", rc, sysfs);
+            return ONLP_STATUS_E_INTERNAL;
+        }
+
+        snprintf(sysfs, sizeof(sysfs), 
+                    MB_CPLDX_SYSFS_PATH"/"MB_CPLD_BUILD_VER_ATTR, CPLD_BASE_ADDR+i);
+        if ((rc = file_read_hex(&cpld_ver_build, sysfs)) != ONLP_STATUS_OK) {
+            AIM_LOG_ERROR("file_read_hex failed, error=%d, %s", rc, sysfs);
+            return ONLP_STATUS_E_INTERNAL;
+        }
+
+        snprintf(mb_cpld_ver_h[i], sizeof(mb_cpld_ver_h[i]), "%d.%02d.%03d",
+                    cpld_ver_major, cpld_ver_minor, cpld_ver_build);
     }
 
     pi->cpld_versions = aim_fstrdup(            
@@ -860,7 +873,7 @@ bmc_fan_info_get(onlp_fan_info_t* info, int id)
     
     //check presence for fantray 1-6
     if (id >= FAN_ID_FAN1_F && id <= FAN_ID_FAN6_R) {
-        rv = bmc_sensor_read(id/2 + ID_FAN0_PSNT_L, FAN_SENSOR, &data);
+        rv = bmc_sensor_read((id-1)/2 + ID_FAN0_PSNT_L, FAN_SENSOR, &data);
         if ( rv != ONLP_STATUS_OK) {
             AIM_LOG_ERROR("unable to read sensor info from BMC, sensor=%d\n", id);
             return rv;

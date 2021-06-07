@@ -153,14 +153,6 @@ class OnlPlatform_x86_64_ufispace_s9300_32d_r0(OnlPlatformUfiSpace):
         # init eeprom
         self.init_eeprom()
 
-        # init Temperature
-        self.new_i2c_devices(
-            [               
-                # CPU Board Temp
-                ('tmp75', 0x4F, 0),
-            ]
-        )
-
         # init CPLD
         self.insmod("x86-64-ufispace-s9300-32d-cpld")
         for i, addr in enumerate((0x30, 0x31, 0x32)):
