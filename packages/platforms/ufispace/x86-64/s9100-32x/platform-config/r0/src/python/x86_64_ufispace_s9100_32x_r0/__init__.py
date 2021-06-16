@@ -14,7 +14,18 @@ class OnlPlatform_x86_64_ufispace_s9100_32x_r0(OnlPlatformUfiSpace):
     SYS_OBJECT_ID=".9100.32"
     PORT_COUNT=32
     PORT_CONFIG="32x100"
-    
+
+    def init_i2c_mux_idle_state(self, muxs):        
+        IDLE_STATE_DISCONNECT = -2
+        
+        for mux in muxs:
+            i2c_addr = mux[1]
+            i2c_bus = mux[2]
+            sysfs_idle_state = "/sys/bus/i2c/devices/%d-%s/idle_state" % (i2c_bus, hex(i2c_addr)[2:].zfill(4))
+            if os.path.exists(sysfs_idle_state):
+                with open(sysfs_idle_state, 'w') as f:
+                    f.write(str(IDLE_STATE_DISCONNECT))
+
     def baseconfig(self):
                 
         os.system("modprobe -r gpio_ich")
@@ -33,15 +44,18 @@ class OnlPlatform_x86_64_ufispace_s9100_32x_r0(OnlPlatformUfiSpace):
         self.new_i2c_device('pca9548', 0x70, 1)
                    
         # initialize i2c
-        self.new_i2c_devices(
-            [
-                ('pca9548', 0x71, 2),
-                ('pca9548', 0x72, 3),
-                ('pca9548', 0x73, 4),
-                ('pca9548', 0x74, 5),
-                ('pca9546', 0x75, 8),
-                ]
-            )
+        i2c_muxs = [
+            ('pca9548', 0x71, 2),
+            ('pca9548', 0x72, 3),
+            ('pca9548', 0x73, 4),
+            ('pca9548', 0x74, 5),
+            ('pca9546', 0x75, 8),
+        ]
+
+        self.new_i2c_devices(i2c_muxs)
+        
+        #init idle state on mux
+        self.init_i2c_mux_idle_state(i2c_muxs)
 
         #Init CPLD LED_CLR Register (Front Port LED)
         os.system("echo ''")
