@@ -174,7 +174,7 @@ static int update_psui_fru_info(int local_id, onlp_psu_info_t* info)
 
     //Check output is correct    
     if (strnlen(cmd_out, sizeof(cmd_out)) == 0){
-        AIM_LOG_ERROR("unable to read fru info from BMC, fru id=%d, cmd=%s, out=%s\n", local_id, cmd, cmd_out);
+        AIM_LOG_ERROR("unable to read fru info from BMC, cmd_out is empty, fru id=%d, cmd=%s, out=%s\n", local_id, cmd, cmd_out);
         return ONLP_STATUS_E_INTERNAL; 
     }    
     
@@ -189,7 +189,7 @@ static int update_psui_fru_info(int local_id, onlp_psu_info_t* info)
     
     //Get psu fru info (model) from BMC
     if (exec_cmd(cmd, cmd_out, sizeof(cmd_out)) < 0) {
-        AIM_LOG_ERROR("unable to read fru info from BMC, fru id=%d, cmd=%s, out=%s\n", local_id, cmd, cmd_out);
+        AIM_LOG_ERROR("unable to read fru info from BMC, cmd_out is empty, fru id=%d, cmd=%s, out=%s\n", local_id, cmd, cmd_out);
         return ONLP_STATUS_E_INTERNAL;
     }
 
@@ -199,7 +199,7 @@ static int update_psui_fru_info(int local_id, onlp_psu_info_t* info)
         return ONLP_STATUS_E_INTERNAL;
     }
     
-    snprintf(info->serial, sizeof(info->model), "%s", cmd_out);
+    snprintf(info->serial, sizeof(info->serial), "%s", cmd_out);
     
     return ONLP_STATUS_OK;
 }

@@ -234,6 +234,7 @@ int bmc_sensor_read(int bmc_cache_index, int sensor_type, float *data)
     long file_last_time = 0;
     static long bmc_cache_time = 0;    
     char* presence_str = "Present";
+    int retry = 0, retry_max = 3;
     
     switch(sensor_type) {
         case FAN_SENSOR:
@@ -271,7 +272,19 @@ int bmc_sensor_read(int bmc_cache_index, int sensor_type, float *data)
         ONLP_LOCK();
         if(bmc_cache_expired_check(file_last_time, bmc_cache_time, cache_time)) {
             snprintf(ipmi_cmd, sizeof(ipmi_cmd), CMD_BMC_SENSOR_CACHE);
-            system(ipmi_cmd);
+            for (retry = 0; retry < retry_max; ++retry) {
+                if ((rv = system(ipmi_cmd)) != ONLP_STATUS_OK) {
+                    if (retry == retry_max-1) {
+                        AIM_LOG_ERROR("%s() write bmc sensor cache failed, retry=%d, cmd=%s, ret=%d",
+                            __func__, retry, ipmi_cmd, rv);
+                        return ONLP_STATUS_E_INTERNAL;
+                    } else {
+                        continue;
+                    }
+                } else {
+                    break;
+                }
+            } 
         }
 
         for(dev_num = 0; dev_num < dev_size; dev_num++)
@@ -357,33 +370,22 @@ int exec_cmd(char *cmd, char* out, int size) {
     return ONLP_STATUS_OK;
 }
 
-int get_ipmitool_len(char *ipmitool_out) {
+int get_ipmitool_len(char *ipmitool_out)
+{
     size_t str_len=0, ipmitool_len=0;
+
     str_len = strlen(ipmitool_out);
     if (str_len>0) {
         ipmitool_len = str_len/3;
     }
+
     return ipmitool_len;
 }
 
 bool onlp_sysi_bmc_en_get(void)
 {
-//enable bmc by default
-#if 0
-    int value;
-
-    if (onlp_file_read_int(&value, BMC_EN_FILE_PATH) < 0) {
-        // flag file not exist, default to not enable
-        return false;
-    }
-
-    /* 1 - enable, 0 - no enable */
-    if ( value ) 
-        return true;
-
-    return false;
-#endif
-   return true;
+    //enable bmc by default
+    return true;
 }
 
 int parse_bmc_sdr_cmd(char *cmd_out, int cmd_out_size,
