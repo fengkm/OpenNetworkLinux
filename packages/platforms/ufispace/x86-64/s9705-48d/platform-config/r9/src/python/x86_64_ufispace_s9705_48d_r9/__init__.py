@@ -52,8 +52,8 @@ class IPMI_Ioctl(object):
     def set_ipmi_maintenance_mode(self, mode):
         fcntl.ioctl(self.ipmidev, self.IPMICTL_SET_MAINTENANCE_MODE_CMD, c_int(mode))
 
-class OnlPlatform_x86_64_ufispace_s9705_48d_r0(OnlPlatformUfiSpace):
-    PLATFORM='x86-64-ufispace-s9705-48d-r0'
+class OnlPlatform_x86_64_ufispace_s9705_48d_r9(OnlPlatformUfiSpace):
+    PLATFORM='x86-64-ufispace-s9705-48d-r9'
     MODEL="S9705-48D"
     SYS_OBJECT_ID=".9705.48"
     PORT_COUNT=48
