@@ -5,5 +5,5 @@
 ###############################################################################
 
 ucli:
-    @../../../../tools/uclihandlers.py x86_64_ufispace_s9999_99x_ucli.c
+    @../../../../tools/uclihandlers.py x86_64_ufispace_s9705_48d_ucli.c
 

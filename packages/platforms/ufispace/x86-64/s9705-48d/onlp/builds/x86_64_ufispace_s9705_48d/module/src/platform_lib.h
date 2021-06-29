@@ -26,7 +26,7 @@
 #ifndef __PLATFORM_LIB_H__
 #define __PLATFORM_LIB_H__
 
-#include "x86_64_ufispace_s9999_99x_log.h"
+#include "x86_64_ufispace_s9705_48d_log.h"
 
 
 

@@ -1,9 +1,9 @@
 /**************************************************************************//**
  *
  * @file
- * @brief x86_64_ufispace_s9999_99x Porting Macros.
+ * @brief x86_64_ufispace_s9705_48d Porting Macros.
  *
- * @addtogroup x86_64_ufispace_s9999_99x-porting
+ * @addtogroup x86_64_ufispace_s9705_48d-porting
  * @{
  *
  *****************************************************************************/

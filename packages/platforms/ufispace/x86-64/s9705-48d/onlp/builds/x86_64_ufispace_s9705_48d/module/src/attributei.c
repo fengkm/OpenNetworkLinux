@@ -34,8 +34,8 @@
 #include <onlplib/i2c.h>
 #include <onlplib/onie.h>
 
-#include "x86_64_ufispace_s9999_99x_int.h"
-#include "x86_64_ufispace_s9999_99x_log.h"
+#include "x86_64_ufispace_s9705_48d_int.h"
+#include "x86_64_ufispace_s9705_48d_log.h"
 
 #include "platform_lib.h"
 
@@ -103,71 +103,71 @@ static int _sysi_onie_info_total_len_get(onlp_onie_info_t *onie, uint16_t *total
 static sysi_onie_vpd_t __tlv_vpd_info[SYSI_ONIE_TYPE_SUPPORT_NUM] = {
     {
         TLV_CODE_PRODUCT_NAME,
-        "/sys/class/eeprom/x86_64_ufispace_s9999_99x_onie_syseeprom/product_name"
+        "/sys/class/eeprom/x86_64_ufispace_s9705_48d_onie_syseeprom/product_name"
     },
     {
         TLV_CODE_PART_NUMBER,
-        "/sys/class/eeprom/x86_64_ufispace_s9999_99x_onie_syseeprom/part_number"
+        "/sys/class/eeprom/x86_64_ufispace_s9705_48d_onie_syseeprom/part_number"
     },
     {
         TLV_CODE_SERIAL_NUMBER,
-        "/sys/class/eeprom/x86_64_ufispace_s9999_99x_onie_syseeprom/serial_number"
+        "/sys/class/eeprom/x86_64_ufispace_s9705_48d_onie_syseeprom/serial_number"
     },
     {
         TLV_CODE_MAC_BASE,
-        "/sys/class/eeprom/x86_64_ufispace_s9999_99x_onie_syseeprom/base_mac_address"
+        "/sys/class/eeprom/x86_64_ufispace_s9705_48d_onie_syseeprom/base_mac_address"
     },
     {
         TLV_CODE_MANUF_DATE,
-        "/sys/class/eeprom/x86_64_ufispace_s9999_99x_onie_syseeprom/manufacture_date"
+        "/sys/class/eeprom/x86_64_ufispace_s9705_48d_onie_syseeprom/manufacture_date"
     },
     {
         TLV_CODE_DEVICE_VERSION,
-        "/sys/class/eeprom/x86_64_ufispace_s9999_99x_onie_syseeprom/device_version"
+        "/sys/class/eeprom/x86_64_ufispace_s9705_48d_onie_syseeprom/device_version"
     },
     {
         TLV_CODE_LABEL_REVISION,
-        "/sys/class/eeprom/x86_64_ufispace_s9999_99x_onie_syseeprom/label_revision"
+        "/sys/class/eeprom/x86_64_ufispace_s9705_48d_onie_syseeprom/label_revision"
     },
     {
         TLV_CODE_PLATFORM_NAME,
-        "/sys/class/eeprom/x86_64_ufispace_s9999_99x_onie_syseeprom/platform_name"
+        "/sys/class/eeprom/x86_64_ufispace_s9705_48d_onie_syseeprom/platform_name"
     },
     {
         TLV_CODE_ONIE_VERSION,
-        "/sys/class/eeprom/x86_64_ufispace_s9999_99x_onie_syseeprom/onie_version"
+        "/sys/class/eeprom/x86_64_ufispace_s9705_48d_onie_syseeprom/onie_version"
     },
     {
         TLV_CODE_MAC_SIZE,
-        "/sys/class/eeprom/x86_64_ufispace_s9999_99x_onie_syseeprom/mac_addresses"
+        "/sys/class/eeprom/x86_64_ufispace_s9705_48d_onie_syseeprom/mac_addresses"
     },
     {
         TLV_CODE_MANUF_NAME,
-        "/sys/class/eeprom/x86_64_ufispace_s9999_99x_onie_syseeprom/manufacturer"
+        "/sys/class/eeprom/x86_64_ufispace_s9705_48d_onie_syseeprom/manufacturer"
     },
     {
         TLV_CODE_MANUF_COUNTRY,
-        "/sys/class/eeprom/x86_64_ufispace_s9999_99x_onie_syseeprom/country_code"
+        "/sys/class/eeprom/x86_64_ufispace_s9705_48d_onie_syseeprom/country_code"
     },
     {
         TLV_CODE_VENDOR_NAME,
-        "/sys/class/eeprom/x86_64_ufispace_s9999_99x_onie_syseeprom/vendor_name"
+        "/sys/class/eeprom/x86_64_ufispace_s9705_48d_onie_syseeprom/vendor_name"
     },
     {
         TLV_CODE_DIAG_VERSION,
-        "/sys/class/eeprom/x86_64_ufispace_s9999_99x_onie_syseeprom/diag_version"
+        "/sys/class/eeprom/x86_64_ufispace_s9705_48d_onie_syseeprom/diag_version"
     },
     {
         TLV_CODE_SERVICE_TAG,
-        "/sys/class/eeprom/x86_64_ufispace_s9999_99x_onie_syseeprom/service_tag"
+        "/sys/class/eeprom/x86_64_ufispace_s9705_48d_onie_syseeprom/service_tag"
     },
     {
         TLV_CODE_VENDOR_EXT,
-        "/sys/class/eeprom/x86_64_ufispace_s9999_99x_onie_syseeprom/vendor_ext"
+        "/sys/class/eeprom/x86_64_ufispace_s9705_48d_onie_syseeprom/vendor_ext"
     },
     {
         TLV_CODE_CRC_32,
-        "/sys/class/eeprom/x86_64_ufispace_s9999_99x_onie_syseeprom/crc32"
+        "/sys/class/eeprom/x86_64_ufispace_s9705_48d_onie_syseeprom/crc32"
     }
 };
 

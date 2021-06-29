@@ -4,6 +4,6 @@
 #
 ###############################################################################
 
-LIBRARY := x86_64_ufispace_s9999_99x
+LIBRARY := x86_64_ufispace_s9705_48d
 $(LIBRARY)_SUBDIR := $(dir $(lastword $(MAKEFILE_LIST)))
 include $(BUILDER)/lib.mk

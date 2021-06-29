@@ -22,7 +22,7 @@
  * Debug Implementation.
  *
  ***********************************************************/
-#include "x86_64_ufispace_s9999_99x_int.h"
+#include "x86_64_ufispace_s9705_48d_int.h"
 
 #if X86_64_UFISPACE_S9999_99X_CONFIG_INCLUDE_DEBUG == 1
 
@@ -35,7 +35,7 @@ static char help__[] =
     ;
 
 int
-x86_64_ufispace_s9999_99x_debug_main(int argc, char* argv[])
+x86_64_ufispace_s9705_48d_debug_main(int argc, char* argv[])
 {
     int c = 0;
     int help = 0;

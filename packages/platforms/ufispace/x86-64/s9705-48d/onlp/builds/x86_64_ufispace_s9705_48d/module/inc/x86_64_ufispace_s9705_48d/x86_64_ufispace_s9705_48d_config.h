@@ -1,9 +1,9 @@
 /**************************************************************************//**
  *
  * @file
- * @brief x86_64_ufispace_s9999_99x Configuration Header
+ * @brief x86_64_ufispace_s9705_48d Configuration Header
  *
- * @addtogroup x86_64_ufispace_s9999_99x-config
+ * @addtogroup x86_64_ufispace_s9705_48d-config
  * @{
  *
  *****************************************************************************/
@@ -14,7 +14,7 @@
 #include <global_custom_config.h>
 #endif
 #ifdef X86_64_UFISPACE_S9999_99X_INCLUDE_CUSTOM_CONFIG
-#include <x86_64_ufispace_s9999_99x_custom_config.h>
+#include <x86_64_ufispace_s9705_48d_custom_config.h>
 #endif
 
 /* <auto.start.cdefs(X86_64_UFISPACE_S9999_99X_CONFIG_HEADER).header> */
@@ -106,32 +106,32 @@
  */
 
 /** Configuration settings structure. */
-typedef struct x86_64_ufispace_s9999_99x_config_settings_s {
+typedef struct x86_64_ufispace_s9705_48d_config_settings_s {
     /** name */
     const char* name;
     /** value */
     const char* value;
-} x86_64_ufispace_s9999_99x_config_settings_t;
+} x86_64_ufispace_s9705_48d_config_settings_t;
 
 /** Configuration settings table. */
-/** x86_64_ufispace_s9999_99x_config_settings table. */
-extern x86_64_ufispace_s9999_99x_config_settings_t x86_64_ufispace_s9999_99x_config_settings[];
+/** x86_64_ufispace_s9705_48d_config_settings table. */
+extern x86_64_ufispace_s9705_48d_config_settings_t x86_64_ufispace_s9705_48d_config_settings[];
 
 /**
  * @brief Lookup a configuration setting.
  * @param setting The name of the configuration option to lookup.
  */
-const char* x86_64_ufispace_s9999_99x_config_lookup(const char* setting);
+const char* x86_64_ufispace_s9705_48d_config_lookup(const char* setting);
 
 /**
  * @brief Show the compile-time configuration.
  * @param pvs The output stream.
  */
-int x86_64_ufispace_s9999_99x_config_show(struct aim_pvs_s* pvs);
+int x86_64_ufispace_s9705_48d_config_show(struct aim_pvs_s* pvs);
 
 /* <auto.end.cdefs(X86_64_UFISPACE_S9999_99X_CONFIG_HEADER).header> */
 
-#include "x86_64_ufispace_s9999_99x_porting.h"
+#include "x86_64_ufispace_s9705_48d_porting.h"
 
 #endif /* __X86_64_UFISPACE_S9999_99X_CONFIG_H__ */
 /* @} */

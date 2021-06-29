@@ -2,7 +2,7 @@
 #define UFI_VPD_H
 
 #define EEPROM_CLASS   "eeprom"
-#define VPD_DEVICE     "x86_64_ufispace_s9999_99x_onie_syseeprom"
+#define VPD_DEVICE     "x86_64_ufispace_s9705_48d_onie_syseeprom"
 #define VPD_AUTHOR     "UfiSpace <feng.cf.lee@ufispace.com>"
 #define VPD_DESC       "UfiSpace eeprom vpd driver"
 #define VPD_VERSION    "1.0.0"

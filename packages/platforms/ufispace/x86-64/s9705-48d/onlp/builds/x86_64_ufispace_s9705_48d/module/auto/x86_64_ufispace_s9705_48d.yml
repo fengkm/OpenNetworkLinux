@@ -35,7 +35,7 @@ definitions:
   cdefs:
     X86_64_UFISPACE_S9999_99X_CONFIG_HEADER:
       defs: *cdefs
-      basename: x86_64_ufispace_s9999_99x_config
+      basename: x86_64_ufispace_s9705_48d_config
 
   portingmacro:
     X86_64_UFISPACE_S9999_99X:

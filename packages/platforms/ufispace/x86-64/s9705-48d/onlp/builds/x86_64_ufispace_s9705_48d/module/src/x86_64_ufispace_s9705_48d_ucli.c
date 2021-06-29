@@ -3,7 +3,7 @@
  * x86_64_ufispace_s9999_99dx ucli
  *
  *****************************************************************************/
-#include <x86_64_ufispace_s9999_99x/x86_64_ufispace_s9999_99x_config.h>
+#include <x86_64_ufispace_s9705_48d/x86_64_ufispace_s9705_48d_config.h>
 
 #if X86_64_UFISPACE_S9999_99X_CONFIG_INCLUDE_UCLI == 1
 
@@ -12,37 +12,37 @@
 #include <uCli/ucli_handler_macros.h>
 
 static ucli_status_t
-x86_64_ufispace_s9999_99x_ucli_ucli__config__(ucli_context_t* uc)
+x86_64_ufispace_s9705_48d_ucli_ucli__config__(ucli_context_t* uc)
 {
-    UCLI_HANDLER_MACRO_MODULE_CONFIG(x86_64_ufispace_s9999_99x)
+    UCLI_HANDLER_MACRO_MODULE_CONFIG(x86_64_ufispace_s9705_48d)
 }
 
 /* <auto.ucli.handlers.start> */
 /* <auto.ucli.handlers.end> */
 
 static ucli_module_t
-x86_64_ufispace_s9999_99x_ucli_module__ =
+x86_64_ufispace_s9705_48d_ucli_module__ =
     {
-        "x86_64_ufispace_s9999_99x_ucli",
+        "x86_64_ufispace_s9705_48d_ucli",
         NULL,
-        x86_64_ufispace_s9999_99x_ucli_ucli_handlers__,
+        x86_64_ufispace_s9705_48d_ucli_ucli_handlers__,
         NULL,
         NULL,
     };
 
 ucli_node_t*
-x86_64_ufispace_s9999_99x_ucli_node_create(void)
+x86_64_ufispace_s9705_48d_ucli_node_create(void)
 {
     ucli_node_t* n;
-    ucli_module_init(&x86_64_ufispace_s9999_99x_ucli_module__);
-    n = ucli_node_create("x86_64_ufispace_s9999_99x", NULL, &x86_64_ufispace_s9999_99x_ucli_module__);
-    ucli_node_subnode_add(n, ucli_module_log_node_create("x86_64_ufispace_s9999_99x"));
+    ucli_module_init(&x86_64_ufispace_s9705_48d_ucli_module__);
+    n = ucli_node_create("x86_64_ufispace_s9705_48d", NULL, &x86_64_ufispace_s9705_48d_ucli_module__);
+    ucli_node_subnode_add(n, ucli_module_log_node_create("x86_64_ufispace_s9705_48d"));
     return n;
 }
 
 #else
 void*
-x86_64_ufispace_s9999_99x_ucli_node_create(void)
+x86_64_ufispace_s9705_48d_ucli_node_create(void)
 {
     return NULL;
 }
