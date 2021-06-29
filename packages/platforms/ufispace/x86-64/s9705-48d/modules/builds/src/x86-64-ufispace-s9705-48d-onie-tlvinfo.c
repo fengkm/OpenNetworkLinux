@@ -7,7 +7,7 @@
 
 //#include <linux/slab.h>
 //#include <linux/platform_device.h>
-#include "x86-64-ufispace-s9999-99x-onie-tlvinfo.h"
+#include "x86-64-ufispace-s9705-48d-onie-tlvinfo.h"
 
 /* Set to 1 if we've read EEPROM into memory */
 static int has_been_read = 0;

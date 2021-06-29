@@ -10,8 +10,8 @@
 #include <linux/jiffies.h>
 #include <linux/dmi.h>
 #include <linux/i2c.h>
-#include "x86-64-ufispace-s9999-99x-vpd.h"
-#include "x86-64-ufispace-s9999-99x-onie-tlvinfo.h"
+#include "x86-64-ufispace-s9705-48d-vpd.h"
+#include "x86-64-ufispace-s9705-48d-onie-tlvinfo.h"
 
 #ifndef ENABLE_VPD_WRITE
 #define ENABLE_VPD_WRITE 0

@@ -53,7 +53,7 @@ class IPMI_Ioctl(object):
         fcntl.ioctl(self.ipmidev, self.IPMICTL_SET_MAINTENANCE_MODE_CMD, c_int(mode))
 
 class OnlPlatform_x86_64_ufispace_s9999_99x_r0(OnlPlatformUfiSpace):
-    PLATFORM='x86-64-ufispace-s9999-99x-r0'
+    PLATFORM='x86-64-ufispace-s9705-48d-r0'
     MODEL="S9999-99X"
     SYS_OBJECT_ID=".9999.99"
     PORT_COUNT=99

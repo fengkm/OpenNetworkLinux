@@ -865,7 +865,7 @@ static int _sysi_onie_info_total_len_get(onlp_onie_info_t *onie, uint16_t *total
 
 const char* onlp_sysi_platform_get(void)
 {
-    return "x86-64-ufispace-s9999-99x-r0";
+    return "x86-64-ufispace-s9705-48d-r0";
 }
 
 

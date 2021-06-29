@@ -49,7 +49,7 @@
  */
 const char* onlp_platformi_get(void)
 {
-    return "x86-64-ufispace-s9999-99x-r0";
+    return "x86-64-ufispace-s9705-48d-r0";
 }
 
 /**
