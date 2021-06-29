@@ -3,8 +3,8 @@
  * x86_64_ufispace_s9705_48d Doxygen Header
  *
  *****************************************************************************/
-#ifndef __X86_64_UFISPACE_S9999_99X_DOX_H__
-#define __X86_64_UFISPACE_S9999_99X_DOX_H__
+#ifndef __X86_64_UFISPACE_S9705_48D_DOX_H__
+#define __X86_64_UFISPACE_S9705_48D_DOX_H__
 
 /**
  * @defgroup x86_64_ufispace_s9705_48d x86_64_ufispace_s9705_48d - x86_64_ufispace_s9705_48d Description
@@ -23,4 +23,4 @@ The documentation overview for this module should go here.
  *
  */
 
-#endif /* __X86_64_UFISPACE_S9999_99X_DOX_H__ */
+#endif /* __X86_64_UFISPACE_S9705_48D_DOX_H__ */

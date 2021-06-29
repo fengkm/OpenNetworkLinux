@@ -10,7 +10,7 @@
 static int
 datatypes_init__(void)
 {
-#define X86_64_UFISPACE_S9999_99X_ENUMERATION_ENTRY(_enum_name, _desc)     AIM_DATATYPE_MAP_REGISTER(_enum_name, _enum_name##_map, _desc,                               AIM_LOG_INTERNAL);
+#define X86_64_UFISPACE_S9705_48D_ENUMERATION_ENTRY(_enum_name, _desc)     AIM_DATATYPE_MAP_REGISTER(_enum_name, _enum_name##_map, _desc,                               AIM_LOG_INTERNAL);
 #include <x86_64_ufispace_s9705_48d/x86_64_ufispace_s9705_48d.x>
     return 0;
 }

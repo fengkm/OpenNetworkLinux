@@ -5,7 +5,7 @@
  *****************************************************************************/
 #include <x86_64_ufispace_s9705_48d/x86_64_ufispace_s9705_48d_config.h>
 
-#if X86_64_UFISPACE_S9999_99X_CONFIG_INCLUDE_UCLI == 1
+#if X86_64_UFISPACE_S9705_48D_CONFIG_INCLUDE_UCLI == 1
 
 #include <uCli/ucli.h>
 #include <uCli/ucli_argparse.h>

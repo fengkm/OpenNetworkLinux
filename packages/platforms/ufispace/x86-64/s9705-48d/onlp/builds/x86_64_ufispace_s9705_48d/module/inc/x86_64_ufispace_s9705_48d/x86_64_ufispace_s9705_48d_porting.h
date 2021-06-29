@@ -7,12 +7,12 @@
  * @{
  *
  *****************************************************************************/
-#ifndef __X86_64_UFISPACE_S9999_99X_PORTING_H__
-#define __X86_64_UFISPACE_S9999_99X_PORTING_H__
+#ifndef __X86_64_UFISPACE_S9705_48D_PORTING_H__
+#define __X86_64_UFISPACE_S9705_48D_PORTING_H__
 
 
 /* <auto.start.portingmacro(ALL).define> */
-#if X86_64_UFISPACE_S9999_99X_CONFIG_PORTING_INCLUDE_STDLIB_HEADERS == 1
+#if X86_64_UFISPACE_S9705_48D_CONFIG_PORTING_INCLUDE_STDLIB_HEADERS == 1
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -20,88 +20,88 @@
 #include <memory.h>
 #endif
 
-#ifndef X86_64_UFISPACE_S9999_99X_MALLOC
+#ifndef X86_64_UFISPACE_S9705_48D_MALLOC
     #if defined(GLOBAL_MALLOC)
-        #define X86_64_UFISPACE_S9999_99X_MALLOC GLOBAL_MALLOC
-    #elif X86_64_UFISPACE_S9999_99X_CONFIG_PORTING_STDLIB == 1
-        #define X86_64_UFISPACE_S9999_99X_MALLOC malloc
+        #define X86_64_UFISPACE_S9705_48D_MALLOC GLOBAL_MALLOC
+    #elif X86_64_UFISPACE_S9705_48D_CONFIG_PORTING_STDLIB == 1
+        #define X86_64_UFISPACE_S9705_48D_MALLOC malloc
     #else
-        #error The macro X86_64_UFISPACE_S9999_99X_MALLOC is required but cannot be defined.
+        #error The macro X86_64_UFISPACE_S9705_48D_MALLOC is required but cannot be defined.
     #endif
 #endif
 
-#ifndef X86_64_UFISPACE_S9999_99X_FREE
+#ifndef X86_64_UFISPACE_S9705_48D_FREE
     #if defined(GLOBAL_FREE)
-        #define X86_64_UFISPACE_S9999_99X_FREE GLOBAL_FREE
-    #elif X86_64_UFISPACE_S9999_99X_CONFIG_PORTING_STDLIB == 1
-        #define X86_64_UFISPACE_S9999_99X_FREE free
+        #define X86_64_UFISPACE_S9705_48D_FREE GLOBAL_FREE
+    #elif X86_64_UFISPACE_S9705_48D_CONFIG_PORTING_STDLIB == 1
+        #define X86_64_UFISPACE_S9705_48D_FREE free
     #else
-        #error The macro X86_64_UFISPACE_S9999_99X_FREE is required but cannot be defined.
+        #error The macro X86_64_UFISPACE_S9705_48D_FREE is required but cannot be defined.
     #endif
 #endif
 
-#ifndef X86_64_UFISPACE_S9999_99X_MEMSET
+#ifndef X86_64_UFISPACE_S9705_48D_MEMSET
     #if defined(GLOBAL_MEMSET)
-        #define X86_64_UFISPACE_S9999_99X_MEMSET GLOBAL_MEMSET
-    #elif X86_64_UFISPACE_S9999_99X_CONFIG_PORTING_STDLIB == 1
-        #define X86_64_UFISPACE_S9999_99X_MEMSET memset
+        #define X86_64_UFISPACE_S9705_48D_MEMSET GLOBAL_MEMSET
+    #elif X86_64_UFISPACE_S9705_48D_CONFIG_PORTING_STDLIB == 1
+        #define X86_64_UFISPACE_S9705_48D_MEMSET memset
     #else
-        #error The macro X86_64_UFISPACE_S9999_99X_MEMSET is required but cannot be defined.
+        #error The macro X86_64_UFISPACE_S9705_48D_MEMSET is required but cannot be defined.
     #endif
 #endif
 
-#ifndef X86_64_UFISPACE_S9999_99X_MEMCPY
+#ifndef X86_64_UFISPACE_S9705_48D_MEMCPY
     #if defined(GLOBAL_MEMCPY)
-        #define X86_64_UFISPACE_S9999_99X_MEMCPY GLOBAL_MEMCPY
-    #elif X86_64_UFISPACE_S9999_99X_CONFIG_PORTING_STDLIB == 1
-        #define X86_64_UFISPACE_S9999_99X_MEMCPY memcpy
+        #define X86_64_UFISPACE_S9705_48D_MEMCPY GLOBAL_MEMCPY
+    #elif X86_64_UFISPACE_S9705_48D_CONFIG_PORTING_STDLIB == 1
+        #define X86_64_UFISPACE_S9705_48D_MEMCPY memcpy
     #else
-        #error The macro X86_64_UFISPACE_S9999_99X_MEMCPY is required but cannot be defined.
+        #error The macro X86_64_UFISPACE_S9705_48D_MEMCPY is required but cannot be defined.
     #endif
 #endif
 
-#ifndef X86_64_UFISPACE_S9999_99X_STRNCPY
+#ifndef X86_64_UFISPACE_S9705_48D_STRNCPY
     #if defined(GLOBAL_STRNCPY)
-        #define X86_64_UFISPACE_S9999_99X_STRNCPY GLOBAL_STRNCPY
-    #elif X86_64_UFISPACE_S9999_99X_CONFIG_PORTING_STDLIB == 1
-        #define X86_64_UFISPACE_S9999_99X_STRNCPY strncpy
+        #define X86_64_UFISPACE_S9705_48D_STRNCPY GLOBAL_STRNCPY
+    #elif X86_64_UFISPACE_S9705_48D_CONFIG_PORTING_STDLIB == 1
+        #define X86_64_UFISPACE_S9705_48D_STRNCPY strncpy
     #else
-        #error The macro X86_64_UFISPACE_S9999_99X_STRNCPY is required but cannot be defined.
+        #error The macro X86_64_UFISPACE_S9705_48D_STRNCPY is required but cannot be defined.
     #endif
 #endif
 
-#ifndef X86_64_UFISPACE_S9999_99X_VSNPRINTF
+#ifndef X86_64_UFISPACE_S9705_48D_VSNPRINTF
     #if defined(GLOBAL_VSNPRINTF)
-        #define X86_64_UFISPACE_S9999_99X_VSNPRINTF GLOBAL_VSNPRINTF
-    #elif X86_64_UFISPACE_S9999_99X_CONFIG_PORTING_STDLIB == 1
-        #define X86_64_UFISPACE_S9999_99X_VSNPRINTF vsnprintf
+        #define X86_64_UFISPACE_S9705_48D_VSNPRINTF GLOBAL_VSNPRINTF
+    #elif X86_64_UFISPACE_S9705_48D_CONFIG_PORTING_STDLIB == 1
+        #define X86_64_UFISPACE_S9705_48D_VSNPRINTF vsnprintf
     #else
-        #error The macro X86_64_UFISPACE_S9999_99X_VSNPRINTF is required but cannot be defined.
+        #error The macro X86_64_UFISPACE_S9705_48D_VSNPRINTF is required but cannot be defined.
     #endif
 #endif
 
-#ifndef X86_64_UFISPACE_S9999_99X_SNPRINTF
+#ifndef X86_64_UFISPACE_S9705_48D_SNPRINTF
     #if defined(GLOBAL_SNPRINTF)
-        #define X86_64_UFISPACE_S9999_99X_SNPRINTF GLOBAL_SNPRINTF
-    #elif X86_64_UFISPACE_S9999_99X_CONFIG_PORTING_STDLIB == 1
-        #define X86_64_UFISPACE_S9999_99X_SNPRINTF snprintf
+        #define X86_64_UFISPACE_S9705_48D_SNPRINTF GLOBAL_SNPRINTF
+    #elif X86_64_UFISPACE_S9705_48D_CONFIG_PORTING_STDLIB == 1
+        #define X86_64_UFISPACE_S9705_48D_SNPRINTF snprintf
     #else
-        #error The macro X86_64_UFISPACE_S9999_99X_SNPRINTF is required but cannot be defined.
+        #error The macro X86_64_UFISPACE_S9705_48D_SNPRINTF is required but cannot be defined.
     #endif
 #endif
 
-#ifndef X86_64_UFISPACE_S9999_99X_STRLEN
+#ifndef X86_64_UFISPACE_S9705_48D_STRLEN
     #if defined(GLOBAL_STRLEN)
-        #define X86_64_UFISPACE_S9999_99X_STRLEN GLOBAL_STRLEN
-    #elif X86_64_UFISPACE_S9999_99X_CONFIG_PORTING_STDLIB == 1
-        #define X86_64_UFISPACE_S9999_99X_STRLEN strlen
+        #define X86_64_UFISPACE_S9705_48D_STRLEN GLOBAL_STRLEN
+    #elif X86_64_UFISPACE_S9705_48D_CONFIG_PORTING_STDLIB == 1
+        #define X86_64_UFISPACE_S9705_48D_STRLEN strlen
     #else
-        #error The macro X86_64_UFISPACE_S9999_99X_STRLEN is required but cannot be defined.
+        #error The macro X86_64_UFISPACE_S9705_48D_STRLEN is required but cannot be defined.
     #endif
 #endif
 
 /* <auto.end.portingmacro(ALL).define> */
 
 
-#endif /* __X86_64_UFISPACE_S9999_99X_PORTING_H__ */
+#endif /* __X86_64_UFISPACE_S9705_48D_PORTING_H__ */
 /* @} */

@@ -24,7 +24,7 @@
  ***********************************************************/
 #include "x86_64_ufispace_s9705_48d_int.h"
 
-#if X86_64_UFISPACE_S9999_99X_CONFIG_INCLUDE_DEBUG == 1
+#if X86_64_UFISPACE_S9705_48D_CONFIG_INCLUDE_DEBUG == 1
 
 #include <unistd.h>
 
