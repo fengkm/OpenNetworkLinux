@@ -36,56 +36,56 @@
 #include "platform_lib.h"
 
 
-#define QSFP_PORT_NUM    40
-#define QSFPDD_PORT_NUM  13
-#define SFP_PORT_NUM     2
-#define ALL_PORT_NUM     55
+#define QSFP_NIF_PORT_NUM    40
+#define QSFPDD_FAB_PORT_NUM  13
+#define SFP_PORT_NUM          2
+#define ALL_PORT_NUM         55
 
 #define SFP0_INTERFACE_NAME "enp2s0f0"
 #define SFP1_INTERFACE_NAME "enp2s0f1"
 
 
-static int qsfp_port_eeprom_bus_id_array[QSFP_PORT_NUM] = { 25, 26, 27, 28, 29, \
-                                                            30, 31, 32, 33, 34, \
-                                                            35, 36, 37, 38, 39, \
-                                                            40, 41, 42, 43, 44, \
-                                                            46, 45, 48, 47, 50, \
-                                                            49, 52, 51, 54, 53, \
-                                                            56, 55, 58, 57, 60, \
-                                                            59, 62, 61, 64, 63 };
+static int qsfp_nif_port_eeprom_bus_id_array[QSFP_NIF_PORT_NUM] = { 25, 26, 27, 28, 29, \
+                                                                    30, 31, 32, 33, 34, \
+                                                                    35, 36, 37, 38, 39, \
+                                                                    40, 41, 42, 43, 44, \
+                                                                    46, 45, 48, 47, 50, \
+                                                                    49, 52, 51, 54, 53, \
+                                                                    56, 55, 58, 57, 60, \
+                                                                    59, 62, 61, 64, 63 };
 
-static char qsfp_port_status_cpld_addr_array[QSFP_PORT_NUM][5] = {"0030", "0030", "0030", "0030", "0030", \
-                                                                  "0030", "0030", "0030", "0030", "0030", \
-                                                                  "0030", "0030", "0039", "0039", "0039", \
-                                                                  "0039", "0039", "0039", "0039", "0039", \
-                                                                  "0039", "0039", "0039", "0039", "003a", \
-                                                                  "0039", "003a", "003a", "003a", "003a", \
-                                                                  "003a", "003a", "003a", "003a", "003a", \
-                                                                  "003a", "003a", "003a", "003b", "003b" };
+static char qsfp_nif_port_status_cpld_addr_array[QSFP_NIF_PORT_NUM][5] = {"0030", "0030", "0030", "0030", "0030", \
+                                                                          "0030", "0030", "0030", "0030", "0030", \
+                                                                          "0030", "0030", "0039", "0039", "0039", \
+                                                                          "0039", "0039", "0039", "0039", "0039", \
+                                                                          "0039", "0039", "0039", "0039", "003a", \
+                                                                          "0039", "003a", "003a", "003a", "003a", \
+                                                                          "003a", "003a", "003a", "003a", "003a", \
+                                                                          "003a", "003a", "003a", "003b", "003b" };
 
-static char qsfp_port_status_cpld_index_array[QSFP_PORT_NUM][3] = {"0" , "1" , "2" , "3" , "4" , \
-                                                                   "5" , "6" , "7" , "8" , "9" , \
-                                                                   "10", "11", "0" , "1" , "2" , \
-                                                                   "3" , "4" , "5" , "6" , "7" , \
-                                                                   "9" , "8" , "11", "10", "0" , \
-                                                                   "12", "2" , "1" , "4" , "3" , \
-                                                                   "6" , "5" , "8" , "7" , "10", \
-                                                                   "9" , "12", "11", "1" , "0" };
+static char qsfp_nif_port_status_cpld_index_array[QSFP_NIF_PORT_NUM][3] = {"0" , "1" , "2" , "3" , "4" , \
+                                                                           "5" , "6" , "7" , "8" , "9" , \
+                                                                           "10", "11", "0" , "1" , "2" , \
+                                                                           "3" , "4" , "5" , "6" , "7" , \
+                                                                           "9" , "8" , "11", "10", "0" , \
+                                                                           "12", "2" , "1" , "4" , "3" , \
+                                                                           "6" , "5" , "8" , "7" , "10", \
+                                                                           "9" , "12", "11", "1" , "0" };
 
-static int qsfpdd_port_eeprom_bus_id_array[QSFPDD_PORT_NUM] = { 65, 66, 67, 68, 69, \
-                                                                70, 71, 72, 73, 74, \
-                                                                75, 76, 77};
+static int qsfpdd_fab_port_eeprom_bus_id_array[QSFPDD_FAB_PORT_NUM] = { 65, 66, 67, 68, 69, \
+                                                                        70, 71, 72, 73, 74, \
+                                                                        75, 76, 77};
 
-static char qsfpdd_port_status_cpld_addr_array[QSFPDD_PORT_NUM][5] = {"003b", "003b", "003b", "003c", "003c", \
-                                                                      "003c", "003c", "003c", "003c", "003c", \
-                                                                      "003c", "003c", "003c"};
+static char qsfpdd_fab_port_status_cpld_addr_array[QSFPDD_FAB_PORT_NUM][5] = {"003b", "003b", "003b", "003c", "003c", \
+                                                                              "003c", "003c", "003c", "003c", "003c", \
+                                                                              "003c", "003c", "003c"};
 
-static char qsfpdd_port_status_cpld_index_array[QSFP_PORT_NUM][3] = {"0", "1", "2", "0", "1", \
-                                                                     "2", "3", "4", "5", "6", \
-                                                                     "7", "8", "9"};
+static char qsfpdd_fab_port_status_cpld_index_array[QSFPDD_FAB_PORT_NUM][3] = {"0", "1", "2", "0", "1", \
+                                                                               "2", "3", "4", "5", "6", \
+                                                                               "7", "8", "9"};
 
 /* to get cpld qsfp port status register */
-static int ufi_get_qsfp_port_status_reg(int port_id, int *reg)
+static int ufi_get_qsfp_nif_port_status_reg(int port_id, int *reg)
 {
     int ret = ONLP_STATUS_OK;
     int cpld_qsfp_port_status_reg = 0;
@@ -97,8 +97,8 @@ static int ufi_get_qsfp_port_status_reg(int port_id, int *reg)
     snprintf(qsfp_port_status_sysfs, sizeof(qsfp_port_status_sysfs), 
             "/sys/bus/i2c/devices/%d-%s/cpld_qsfp_port_status_%s", 
             bus_id, 
-            qsfp_port_status_cpld_addr_array[port_id], 
-            qsfp_port_status_cpld_index_array[port_id]);
+            qsfp_nif_port_status_cpld_addr_array[port_id], 
+            qsfp_nif_port_status_cpld_index_array[port_id]);
 
     ONLP_TRY(onlp_file_read((uint8_t*)&buf, ONLP_CONFIG_INFO_STR_MAX, &len, qsfp_port_status_sysfs));
 
@@ -111,7 +111,7 @@ static int ufi_get_qsfp_port_status_reg(int port_id, int *reg)
 }
 
 /* to get cpld qsfp port config register */
-static int ufi_get_qsfp_port_config_reg(int port_id, int *reg)
+static int ufi_get_qsfp_nif_port_config_reg(int port_id, int *reg)
 {
     int ret = ONLP_STATUS_OK;
     int cpld_qsfp_port_config_reg = 0;
@@ -123,8 +123,8 @@ static int ufi_get_qsfp_port_config_reg(int port_id, int *reg)
     snprintf(qsfp_port_config_sysfs, sizeof(qsfp_port_config_sysfs), 
             "/sys/bus/i2c/devices/%d-%s/cpld_qsfp_port_config_%s",
             bus_id, 
-            qsfp_port_status_cpld_addr_array[port_id], 
-            qsfp_port_status_cpld_index_array[port_id]);
+            qsfp_nif_port_status_cpld_addr_array[port_id], 
+            qsfp_nif_port_status_cpld_index_array[port_id]);
 
     ONLP_TRY(onlp_file_read((uint8_t*)&buf, ONLP_CONFIG_INFO_STR_MAX, &len, qsfp_port_config_sysfs));
 
@@ -138,7 +138,7 @@ static int ufi_get_qsfp_port_config_reg(int port_id, int *reg)
 
 
 /* to set cpld qsfp port config register */
-static int ufi_set_qsfp_port_config_reg(int port_id, int value)
+static int ufi_set_qsfp_nif_port_config_reg(int port_id, int value)
 {
     int ret = ONLP_STATUS_OK;
     char qsfp_port_config_sysfs[255] = ""; 
@@ -147,8 +147,8 @@ static int ufi_set_qsfp_port_config_reg(int port_id, int value)
     snprintf(qsfp_port_config_sysfs, sizeof(qsfp_port_config_sysfs), 
             "/sys/bus/i2c/devices/%d-%s/cpld_qsfp_port_config_%s",
             bus_id, 
-            qsfp_port_status_cpld_addr_array[port_id], 
-            qsfp_port_status_cpld_index_array[port_id]);
+            qsfp_nif_port_status_cpld_addr_array[port_id], 
+            qsfp_nif_port_status_cpld_index_array[port_id]);
 
     ONLP_TRY(onlp_file_write_int(value, qsfp_port_config_sysfs));
 
@@ -156,7 +156,7 @@ static int ufi_set_qsfp_port_config_reg(int port_id, int value)
 }
 
 /* to get cpld qsfpdd port status register */
-static int ufi_get_qsfpdd_port_status_reg(int port_id, int *reg)
+static int ufi_get_qsfpdd_fab_port_status_reg(int port_id, int *reg)
 {
     int ret = ONLP_STATUS_OK;
     int cpld_qsfpdd_port_status_reg = 0;
@@ -168,8 +168,8 @@ static int ufi_get_qsfpdd_port_status_reg(int port_id, int *reg)
     snprintf(qsfpdd_port_status_sysfs, sizeof(qsfpdd_port_status_sysfs), 
             "/sys/bus/i2c/devices/%d-%s/cpld_qsfpdd_port_status_%s",
             bus_id, 
-            qsfpdd_port_status_cpld_addr_array[port_id], 
-            qsfpdd_port_status_cpld_index_array[port_id]);
+            qsfpdd_fab_port_status_cpld_addr_array[port_id], 
+            qsfpdd_fab_port_status_cpld_index_array[port_id]);
 
     ONLP_TRY(onlp_file_read((uint8_t*)&buf, ONLP_CONFIG_INFO_STR_MAX, &len, qsfpdd_port_status_sysfs));
 
@@ -182,7 +182,7 @@ static int ufi_get_qsfpdd_port_status_reg(int port_id, int *reg)
 }
 
 /* to get cpld qsfpdd port config register */
-static int ufi_get_qsfpdd_port_config_reg(int port_id, int *reg)
+static int ufi_get_qsfpdd_fab_port_config_reg(int port_id, int *reg)
 {
     int ret = ONLP_STATUS_OK;
     int cpld_qsfpdd_port_config_reg = 0;
@@ -194,8 +194,8 @@ static int ufi_get_qsfpdd_port_config_reg(int port_id, int *reg)
     snprintf(qsfpdd_port_config_sysfs, sizeof(qsfpdd_port_config_sysfs), 
             "/sys/bus/i2c/devices/%d-%s/cpld_qsfpdd_port_config_%s",
             bus_id, 
-            qsfpdd_port_status_cpld_addr_array[port_id], 
-            qsfpdd_port_status_cpld_index_array[port_id]);
+            qsfpdd_fab_port_status_cpld_addr_array[port_id], 
+            qsfpdd_fab_port_status_cpld_index_array[port_id]);
 
     ONLP_TRY(onlp_file_read((uint8_t*)&buf, ONLP_CONFIG_INFO_STR_MAX, &len, qsfpdd_port_config_sysfs));
 
@@ -208,7 +208,7 @@ static int ufi_get_qsfpdd_port_config_reg(int port_id, int *reg)
 }
 
 /* to set cpld qsfpdd port config register */
-static int ufi_set_qsfpdd_port_config_reg(int port_id, int value)
+static int ufi_set_qsfpdd_fab_port_config_reg(int port_id, int value)
 {
     int ret = ONLP_STATUS_OK;
     char qsfpdd_port_config_sysfs[255] = ""; 
@@ -217,8 +217,8 @@ static int ufi_set_qsfpdd_port_config_reg(int port_id, int value)
     snprintf(qsfpdd_port_config_sysfs, sizeof(qsfpdd_port_config_sysfs), 
             "/sys/bus/i2c/devices/%d-%s/cpld_qsfpdd_port_config_%s",
             bus_id, 
-            qsfpdd_port_status_cpld_addr_array[port_id], 
-            qsfpdd_port_status_cpld_index_array[port_id]);
+            qsfpdd_fab_port_status_cpld_addr_array[port_id], 
+            qsfpdd_fab_port_status_cpld_index_array[port_id]);
 
     ONLP_TRY(onlp_file_write_int(value, qsfpdd_port_config_sysfs));
 
@@ -295,26 +295,26 @@ static int ufi_get_port_present_status(int local_id, int *status)
     char command[256] = "";
 
     //QSFP, QSFPDD, SFP Ports
-    if (local_id < QSFP_PORT_NUM) { //QSFP
+    if (local_id < QSFP_NIF_PORT_NUM) { //QSFP
         port_id = local_id;
-        ret = ufi_get_qsfp_port_status_reg(port_id, &port_status_reg);
+        ret = ufi_get_qsfp_nif_port_status_reg(port_id, &port_status_reg);
         if (ret != ONLP_STATUS_OK) {
-            AIM_LOG_ERROR("ufi_get_qsfp_port_status_reg() failed, port=%d\n", port_id);
+            AIM_LOG_ERROR("ufi_get_qsfp_nif_port_status_reg() failed, port=%d\n", port_id);
             return ONLP_STATUS_E_INTERNAL;
         } else {
             *status = !((port_status_reg & 0b00000010) >> 1);
         }
-    } else if (local_id >= QSFP_PORT_NUM && local_id < (QSFP_PORT_NUM + QSFPDD_PORT_NUM)) { //QSFPDD
-        port_id = local_id - QSFP_PORT_NUM;
-        ret = ufi_get_qsfpdd_port_status_reg(port_id, &port_status_reg);
+    } else if (local_id >= QSFP_NIF_PORT_NUM && local_id < (QSFP_NIF_PORT_NUM + QSFPDD_FAB_PORT_NUM)) { //QSFPDD
+        port_id = local_id - QSFP_NIF_PORT_NUM;
+        ret = ufi_get_qsfpdd_fab_port_status_reg(port_id, &port_status_reg);
         if (ret != ONLP_STATUS_OK) {
-            AIM_LOG_ERROR("ufi_get_qsfpdd_port_status_reg() failed, port=%d\n", port_id);
+            AIM_LOG_ERROR("ufi_get_qsfpdd_fab_port_status_reg() failed, port=%d\n", port_id);
             return ONLP_STATUS_E_INTERNAL;
         } else {
             *status = !((port_status_reg & 0b00000010) >> 1);
         }
-    } else if (local_id >= (QSFP_PORT_NUM + QSFPDD_PORT_NUM) && local_id < ALL_PORT_NUM) { //SFP
-        port_id = local_id - (QSFP_PORT_NUM + QSFPDD_PORT_NUM);
+    } else if (local_id >= (QSFP_NIF_PORT_NUM + QSFPDD_FAB_PORT_NUM) && local_id < ALL_PORT_NUM) { //SFP
+        port_id = local_id - (QSFP_NIF_PORT_NUM + QSFPDD_FAB_PORT_NUM);
         if (port_id == 0) { //SFP port0
             snprintf(command, sizeof(command), "ethtool -m %s raw on length 1 > /dev/null 2>&1", SFP0_INTERFACE_NAME);
             ret = system(command);
@@ -418,11 +418,11 @@ int onlp_sfpi_type_get(onlp_oid_id_t id, onlp_sfp_type_t* rtype)
     int local_id = ONLP_OID_ID_GET(id);
 
     //QSFP, QSFPDD, SFP Ports
-    if (local_id < QSFP_PORT_NUM) { //QSFP
+    if (local_id < QSFP_NIF_PORT_NUM) { //QSFP
         *rtype = ONLP_SFP_TYPE_QSFP28;
-    } else if (local_id >= QSFP_PORT_NUM && local_id < (QSFP_PORT_NUM + QSFPDD_PORT_NUM)) { //QSFPDD
+    } else if (local_id >= QSFP_NIF_PORT_NUM && local_id < (QSFP_NIF_PORT_NUM + QSFPDD_FAB_PORT_NUM)) { //QSFPDD
         *rtype = ONLP_SFP_TYPE_QSFP28;
-    } else if (local_id >= (QSFP_PORT_NUM + QSFPDD_PORT_NUM) && local_id < ALL_PORT_NUM) { //SFP
+    } else if (local_id >= (QSFP_NIF_PORT_NUM + QSFPDD_FAB_PORT_NUM) && local_id < ALL_PORT_NUM) { //SFP
         *rtype = ONLP_SFP_TYPE_SFP;
     } else { //unkonwn ports
         AIM_LOG_ERROR("unknown ports, port=%d, func=%s\n", local_id, __FUNCTION__);
@@ -523,21 +523,21 @@ int onlp_sfpi_dev_read(onlp_oid_id_t id, int devaddr, int addr,
     }
 
     devaddr = 0x50;
-    if (local_id < QSFP_PORT_NUM) {
+    if (local_id < QSFP_NIF_PORT_NUM) {
         /* QSFP */
         port_id = local_id;
-        bus_id = qsfp_port_eeprom_bus_id_array[port_id];
+        bus_id = qsfp_nif_port_eeprom_bus_id_array[port_id];
         ONLP_TRY(onlp_i2c_block_read(bus_id, devaddr, addr, len, dst, ONLP_I2C_F_FORCE));
 
-    } else if (local_id >= QSFP_PORT_NUM && local_id < (QSFP_PORT_NUM + QSFPDD_PORT_NUM)) {
+    } else if (local_id >= QSFP_NIF_PORT_NUM && local_id < (QSFP_NIF_PORT_NUM + QSFPDD_FAB_PORT_NUM)) {
         /* QSFPDD */
-        port_id = local_id - QSFP_PORT_NUM;
-        bus_id = qsfpdd_port_eeprom_bus_id_array[port_id];
+        port_id = local_id - QSFP_NIF_PORT_NUM;
+        bus_id = qsfpdd_fab_port_eeprom_bus_id_array[port_id];
         ONLP_TRY(onlp_i2c_block_read(bus_id, devaddr, addr, len, dst, ONLP_I2C_F_FORCE));
 
-    } else if (local_id >= (QSFP_PORT_NUM + QSFPDD_PORT_NUM) && local_id < ALL_PORT_NUM) {
+    } else if (local_id >= (QSFP_NIF_PORT_NUM + QSFPDD_FAB_PORT_NUM) && local_id < ALL_PORT_NUM) {
         /* SFP */
-        port_id = local_id - (QSFP_PORT_NUM + QSFPDD_PORT_NUM);
+        port_id = local_id - (QSFP_NIF_PORT_NUM + QSFPDD_FAB_PORT_NUM);
         ret = ufi_sfpi_sfp_dev_read(port_id, dst, len);
         if (ret != ONLP_STATUS_OK) {
             AIM_LOG_ERROR("ufi_sfpi_sfp_dev_read(port_id=%d, len=%d) read failed!!\n", port_id, len);
@@ -585,19 +585,19 @@ int onlp_sfpi_dev_readb(onlp_oid_id_t id, int devaddr, int addr)
     }
 
     devaddr = 0x50;
-    if (local_id < QSFP_PORT_NUM) {
+    if (local_id < QSFP_NIF_PORT_NUM) {
         /* QSFP */
         port_id = local_id;
-        bus_id = qsfp_port_eeprom_bus_id_array[port_id];
+        bus_id = qsfp_nif_port_eeprom_bus_id_array[port_id];
         ret = onlp_i2c_readb(bus_id, devaddr, addr, ONLP_I2C_F_FORCE);
 
-    } else if (local_id >= QSFP_PORT_NUM && local_id < (QSFP_PORT_NUM + QSFPDD_PORT_NUM)) {
+    } else if (local_id >= QSFP_NIF_PORT_NUM && local_id < (QSFP_NIF_PORT_NUM + QSFPDD_FAB_PORT_NUM)) {
         /* QSFPDD */
-        port_id = local_id - QSFP_PORT_NUM;
-        bus_id = qsfpdd_port_eeprom_bus_id_array[port_id];
+        port_id = local_id - QSFP_NIF_PORT_NUM;
+        bus_id = qsfpdd_fab_port_eeprom_bus_id_array[port_id];
         ret = onlp_i2c_readb(bus_id, devaddr, addr, ONLP_I2C_F_FORCE);
 
-    } else if (local_id >= (QSFP_PORT_NUM + QSFPDD_PORT_NUM) && local_id < ALL_PORT_NUM) {
+    } else if (local_id >= (QSFP_NIF_PORT_NUM + QSFPDD_FAB_PORT_NUM) && local_id < ALL_PORT_NUM) {
         /* SFP */
         return ONLP_STATUS_E_UNSUPPORTED;
 
@@ -629,19 +629,19 @@ int onlp_sfpi_dev_writeb(onlp_oid_id_t id, int devaddr, int addr,
     }
 
     devaddr = 0x50;
-    if (local_id < QSFP_PORT_NUM) {
+    if (local_id < QSFP_NIF_PORT_NUM) {
         /* QSFP */
         port_id = local_id;
-        bus_id = qsfp_port_eeprom_bus_id_array[port_id];
+        bus_id = qsfp_nif_port_eeprom_bus_id_array[port_id];
         ret = onlp_i2c_writeb(bus_id, devaddr, addr, value, ONLP_I2C_F_FORCE);
 
-    } else if (local_id >= QSFP_PORT_NUM && local_id < (QSFP_PORT_NUM + QSFPDD_PORT_NUM)) {
+    } else if (local_id >= QSFP_NIF_PORT_NUM && local_id < (QSFP_NIF_PORT_NUM + QSFPDD_FAB_PORT_NUM)) {
         /* QSFPDD */
-        port_id = local_id - QSFP_PORT_NUM;
-        bus_id = qsfpdd_port_eeprom_bus_id_array[port_id];
+        port_id = local_id - QSFP_NIF_PORT_NUM;
+        bus_id = qsfpdd_fab_port_eeprom_bus_id_array[port_id];
         ret = onlp_i2c_writeb(bus_id, devaddr, addr, value, ONLP_I2C_F_FORCE);
 
-    } else if (local_id >= (QSFP_PORT_NUM + QSFPDD_PORT_NUM) && local_id < ALL_PORT_NUM) {
+    } else if (local_id >= (QSFP_NIF_PORT_NUM + QSFPDD_FAB_PORT_NUM) && local_id < ALL_PORT_NUM) {
         /* SFP */
         return ONLP_STATUS_E_UNSUPPORTED;
 
@@ -672,19 +672,19 @@ int onlp_sfpi_dev_readw(onlp_oid_id_t id, int devaddr, int addr)
     }
 
     devaddr = 0x50;
-    if (local_id < QSFP_PORT_NUM) {
+    if (local_id < QSFP_NIF_PORT_NUM) {
         /* QSFP */
         port_id = local_id;
-        bus_id = qsfp_port_eeprom_bus_id_array[port_id];
+        bus_id = qsfp_nif_port_eeprom_bus_id_array[port_id];
         ret = onlp_i2c_readw(bus_id, devaddr, addr, ONLP_I2C_F_FORCE);
 
-    } else if (local_id >= QSFP_PORT_NUM && local_id < (QSFP_PORT_NUM + QSFPDD_PORT_NUM)) {
+    } else if (local_id >= QSFP_NIF_PORT_NUM && local_id < (QSFP_NIF_PORT_NUM + QSFPDD_FAB_PORT_NUM)) {
         /* QSFPDD */
-        port_id = local_id - QSFP_PORT_NUM;
-        bus_id = qsfpdd_port_eeprom_bus_id_array[port_id];
+        port_id = local_id - QSFP_NIF_PORT_NUM;
+        bus_id = qsfpdd_fab_port_eeprom_bus_id_array[port_id];
         ret = onlp_i2c_readw(bus_id, devaddr, addr, ONLP_I2C_F_FORCE);
 
-    } else if (local_id >= (QSFP_PORT_NUM + QSFPDD_PORT_NUM) && local_id < ALL_PORT_NUM) {
+    } else if (local_id >= (QSFP_NIF_PORT_NUM + QSFPDD_FAB_PORT_NUM) && local_id < ALL_PORT_NUM) {
         /* SFP */
         return ONLP_STATUS_E_UNSUPPORTED;
 
@@ -716,19 +716,19 @@ int onlp_sfpi_dev_writew(onlp_oid_id_t id, int devaddr, int addr,
     }
 
     devaddr = 0x50;
-    if (local_id < QSFP_PORT_NUM) {
+    if (local_id < QSFP_NIF_PORT_NUM) {
         /* QSFP */
         port_id = local_id;
-        bus_id = qsfp_port_eeprom_bus_id_array[port_id];
+        bus_id = qsfp_nif_port_eeprom_bus_id_array[port_id];
         ret = onlp_i2c_writew(bus_id, devaddr, addr, value, ONLP_I2C_F_FORCE);
 
-    } else if (local_id >= QSFP_PORT_NUM && local_id < (QSFP_PORT_NUM + QSFPDD_PORT_NUM)) {
+    } else if (local_id >= QSFP_NIF_PORT_NUM && local_id < (QSFP_NIF_PORT_NUM + QSFPDD_FAB_PORT_NUM)) {
         /* QSFPDD */
-        port_id = local_id - QSFP_PORT_NUM;
-        bus_id = qsfpdd_port_eeprom_bus_id_array[port_id];
+        port_id = local_id - QSFP_NIF_PORT_NUM;
+        bus_id = qsfpdd_fab_port_eeprom_bus_id_array[port_id];
         ONLP_TRY(onlp_i2c_writew(bus_id, devaddr, addr, value, ONLP_I2C_F_FORCE));
 
-    } else if (local_id >= (QSFP_PORT_NUM + QSFPDD_PORT_NUM) && local_id < ALL_PORT_NUM) {
+    } else if (local_id >= (QSFP_NIF_PORT_NUM + QSFPDD_FAB_PORT_NUM) && local_id < ALL_PORT_NUM) {
         /* SFP */
         return ONLP_STATUS_E_UNSUPPORTED;
 
@@ -842,11 +842,11 @@ int onlp_sfpi_control_set(onlp_oid_id_t id, onlp_sfp_control_t control,
                  * return 0: the module is in reset
                  * return 1: the module is NOT in reset
                  */
-                if (local_id < QSFP_PORT_NUM) { //QSFP
+                if (local_id < QSFP_NIF_PORT_NUM) { //QSFP
                     port_id = local_id;
-                    ret = ufi_get_qsfp_port_config_reg(port_id, &port_config_reg);
+                    ret = ufi_get_qsfp_nif_port_config_reg(port_id, &port_config_reg);
                     if (ret != ONLP_STATUS_OK) {
-                        AIM_LOG_ERROR("ufi_get_qsfp_port_config_reg() failed, port=%d\n", port_id);
+                        AIM_LOG_ERROR("ufi_get_qsfp_nif_port_config_reg() failed, port=%d\n", port_id);
                         return ret;
                     } else {
                         if (value == 0) {
@@ -859,17 +859,17 @@ int onlp_sfpi_control_set(onlp_oid_id_t id, onlp_sfp_control_t control,
                         }
 
                         /* set value into qsfp port config register */
-                        ret = ufi_set_qsfp_port_config_reg(port_id, port_config_reg);
+                        ret = ufi_set_qsfp_nif_port_config_reg(port_id, port_config_reg);
                         if (ret != ONLP_STATUS_OK) {
-                            AIM_LOG_ERROR("ufi_set_qsfp_port_config_reg() failed, port=%d, value=%d\n", port_id, port_config_reg);
+                            AIM_LOG_ERROR("ufi_set_qsfp_nif_port_config_reg() failed, port=%d, value=%d\n", port_id, port_config_reg);
                             return ret;
                         }
                     }
-                } else if (local_id >= QSFP_PORT_NUM && local_id < (QSFP_PORT_NUM + QSFPDD_PORT_NUM)) { //QSFPDD
-                    port_id = local_id - QSFP_PORT_NUM;
-                    ret = ufi_get_qsfpdd_port_config_reg(port_id, &port_config_reg);
+                } else if (local_id >= QSFP_NIF_PORT_NUM && local_id < (QSFP_NIF_PORT_NUM + QSFPDD_FAB_PORT_NUM)) { //QSFPDD
+                    port_id = local_id - QSFP_NIF_PORT_NUM;
+                    ret = ufi_get_qsfpdd_fab_port_config_reg(port_id, &port_config_reg);
                     if (ret != ONLP_STATUS_OK) {
-                        AIM_LOG_ERROR("ufi_get_qsfpdd_port_config_reg() failed, port=%d\n", port_id);
+                        AIM_LOG_ERROR("ufi_get_qsfpdd_fab_port_config_reg() failed, port=%d\n", port_id);
                         return ret;
                     } else {
                         if (value == 0) {
@@ -882,9 +882,9 @@ int onlp_sfpi_control_set(onlp_oid_id_t id, onlp_sfp_control_t control,
                         }
 
                         /* set value into qsfp port config register */
-                        ret = ufi_set_qsfpdd_port_config_reg(port_id, port_config_reg);
+                        ret = ufi_set_qsfpdd_fab_port_config_reg(port_id, port_config_reg);
                         if (ret != ONLP_STATUS_OK) {
-                            AIM_LOG_ERROR("ufi_set_qsfpdd_port_config_reg() failed, port=%d, value=%d\n", port_id, port_config_reg);
+                            AIM_LOG_ERROR("ufi_set_qsfpdd_fab_port_config_reg() failed, port=%d, value=%d\n", port_id, port_config_reg);
                             return ret;
                         }
                     }
@@ -905,25 +905,25 @@ int onlp_sfpi_control_set(onlp_oid_id_t id, onlp_sfp_control_t control,
                  * return 0: turn on
                  * return 1: turn off
                  */
-                port_id = local_id - (QSFP_PORT_NUM + QSFPDD_PORT_NUM);
+                port_id = local_id - (QSFP_NIF_PORT_NUM + QSFPDD_FAB_PORT_NUM);
                 ret = ufi_get_sfp_port_config_reg(port_id, &port_config_reg);
                 if (ret != ONLP_STATUS_OK) {
                     AIM_LOG_ERROR("ufi_get_sfp_port_config_reg() failed, port=%d\n", port_id);
                     return ret;
                 } else {
                     if (value == 0) {
-                        if (port_id == (QSFP_PORT_NUM + QSFPDD_PORT_NUM)) { //SFP Port0
+                        if (port_id == (QSFP_NIF_PORT_NUM + QSFPDD_FAB_PORT_NUM)) { //SFP Port0
                             port_config_reg = port_config_reg & 0b11111110;
-                        } else if (port_id == (QSFP_PORT_NUM + QSFPDD_PORT_NUM + 1)) { //SFP Port1
+                        } else if (port_id == (QSFP_NIF_PORT_NUM + QSFPDD_FAB_PORT_NUM + 1)) { //SFP Port1
                             port_config_reg = port_config_reg & 0b11101111;
                         } else {
                             AIM_LOG_ERROR("unknown ports, port=%d, value=%d, func=%s\n", port_id, value, __FUNCTION__);
                             return ONLP_STATUS_E_PARAM;
                         }
                     } else if (value == 1) {
-                        if (port_id == (QSFP_PORT_NUM + QSFPDD_PORT_NUM)) { //SFP Port0
+                        if (port_id == (QSFP_NIF_PORT_NUM + QSFPDD_FAB_PORT_NUM)) { //SFP Port0
                             port_config_reg = port_config_reg | 0b00000001;
-                        } else if (port_id == (QSFP_PORT_NUM + QSFPDD_PORT_NUM + 1)) { //SFP Port1
+                        } else if (port_id == (QSFP_NIF_PORT_NUM + QSFPDD_FAB_PORT_NUM + 1)) { //SFP Port1
                             port_config_reg = port_config_reg | 0b00010000;
                         } else {
                             AIM_LOG_ERROR("unknown ports, port=%d, value=%d, func=%s\n", port_id, value, __FUNCTION__);
@@ -954,11 +954,11 @@ int onlp_sfpi_control_set(onlp_oid_id_t id, onlp_sfp_control_t control,
                  * return 0: normal power mode
                  * return 1: low power mode
                  */
-                if (local_id < QSFP_PORT_NUM) { //QSFP
+                if (local_id < QSFP_NIF_PORT_NUM) { //QSFP
                     port_id = local_id;
-                    ret = ufi_get_qsfp_port_config_reg(port_id, &port_config_reg);
+                    ret = ufi_get_qsfp_nif_port_config_reg(port_id, &port_config_reg);
                     if (ret != ONLP_STATUS_OK) {
-                        AIM_LOG_ERROR("ufi_get_qsfp_port_config_reg() failed, port=%d\n", port_id);
+                        AIM_LOG_ERROR("ufi_get_nif_qsfp_port_config_reg() failed, port=%d\n", port_id);
                         return ret;
                     } else {
                         if (value == 0) {
@@ -971,17 +971,17 @@ int onlp_sfpi_control_set(onlp_oid_id_t id, onlp_sfp_control_t control,
                         }
 
                         /* set value into qsfp port config register */
-                        ret = ufi_set_qsfp_port_config_reg(port_id, port_config_reg);
+                        ret = ufi_set_qsfp_nif_port_config_reg(port_id, port_config_reg);
                         if (ret != ONLP_STATUS_OK) {
-                            AIM_LOG_ERROR("ufi_set_qsfp_port_config_reg() failed, port=%d, value=%d\n", port_id, port_config_reg);
+                            AIM_LOG_ERROR("ufi_set_qsfp_nif_port_config_reg() failed, port=%d, value=%d\n", port_id, port_config_reg);
                             return ret;
                         }
                     }
-                } else if (local_id >= QSFP_PORT_NUM && local_id < (QSFP_PORT_NUM + QSFPDD_PORT_NUM)) { //QSFPDD
-                    port_id = local_id - QSFP_PORT_NUM;
-                    ret = ufi_get_qsfpdd_port_config_reg(port_id, &port_config_reg);
+                } else if (local_id >= QSFP_NIF_PORT_NUM && local_id < (QSFP_NIF_PORT_NUM + QSFPDD_FAB_PORT_NUM)) { //QSFPDD
+                    port_id = local_id - QSFP_NIF_PORT_NUM;
+                    ret = ufi_get_qsfpdd_fab_port_config_reg(port_id, &port_config_reg);
                     if (ret != ONLP_STATUS_OK) {
-                        AIM_LOG_ERROR("ufi_get_qsfpdd_port_config_reg() failed, port=%d\n", port_id);
+                        AIM_LOG_ERROR("ufi_get_qsfpdd_fab_port_config_reg() failed, port=%d\n", port_id);
                         return ret;
                     } else {
                         if (value == 0) {
@@ -994,9 +994,9 @@ int onlp_sfpi_control_set(onlp_oid_id_t id, onlp_sfp_control_t control,
                         }
 
                         /* set value into qsfp port config register */
-                        ret = ufi_set_qsfpdd_port_config_reg(port_id, port_config_reg);
+                        ret = ufi_set_qsfpdd_fab_port_config_reg(port_id, port_config_reg);
                         if (ret != ONLP_STATUS_OK) {
-                            AIM_LOG_ERROR("ufi_set_qsfpdd_port_config_reg() failed, port=%d, value=%d\n", port_id, port_config_reg);
+                            AIM_LOG_ERROR("ufi_set_qsfpdd_fab_port_config_reg() failed, port=%d, value=%d\n", port_id, port_config_reg);
                             return ret;
                         }
                     }
@@ -1049,20 +1049,20 @@ int onlp_sfpi_control_get(onlp_oid_id_t id, onlp_sfp_control_t control,
                  * return 0: the module is in reset
                  * return 1: the module is NOT in reset
                  */
-                if (local_id < QSFP_PORT_NUM) { //QSFP
+                if (local_id < QSFP_NIF_PORT_NUM) { //QSFP
                     port_id = local_id;
-                    ret = ufi_get_qsfp_port_config_reg(port_id, &port_config_reg);
+                    ret = ufi_get_qsfp_nif_port_config_reg(port_id, &port_config_reg);
                     if (ret != ONLP_STATUS_OK) {
-                        AIM_LOG_ERROR("ufi_get_qsfp_port_config_reg() failed, port=%d\n", port_id);
+                        AIM_LOG_ERROR("ufi_get_qsfp_nif_port_config_reg() failed, port=%d\n", port_id);
                         return ret;
                     } else {
                         *value = (port_config_reg & 0b00000001) >> 0;
                     }
-                } else if (local_id >= QSFP_PORT_NUM && local_id < (QSFP_PORT_NUM + QSFPDD_PORT_NUM)) { //QSFPDD
-                    port_id = local_id - QSFP_PORT_NUM;
-                    ret = ufi_get_qsfpdd_port_config_reg(port_id, &port_config_reg);
+                } else if (local_id >= QSFP_NIF_PORT_NUM && local_id < (QSFP_NIF_PORT_NUM + QSFPDD_FAB_PORT_NUM)) { //QSFPDD
+                    port_id = local_id - QSFP_NIF_PORT_NUM;
+                    ret = ufi_get_qsfpdd_fab_port_config_reg(port_id, &port_config_reg);
                     if (ret != ONLP_STATUS_OK) {
-                        AIM_LOG_ERROR("ufi_get_qsfpdd_port_config_reg() failed, port=%d\n", port_id);
+                        AIM_LOG_ERROR("ufi_get_qsfpdd_fab_port_config_reg() failed, port=%d\n", port_id);
                         return ret;
                     } else {
                         *value = (port_config_reg & 0b00000001) >> 0;
@@ -1076,6 +1076,7 @@ int onlp_sfpi_control_get(onlp_oid_id_t id, onlp_sfp_control_t control,
                 return ONLP_STATUS_OK;
             }
             break;
+
         case ONLP_SFP_CONTROL_RX_LOS:
             if (port_type == ONLP_SFP_TYPE_SFP) {
                 /**
@@ -1083,7 +1084,7 @@ int onlp_sfpi_control_get(onlp_oid_id_t id, onlp_sfp_control_t control,
                  * return 0: link up
                  * return 1: link down (rx los)
                  */
-                port_id = local_id - (QSFP_PORT_NUM + QSFPDD_PORT_NUM);
+                port_id = local_id - (QSFP_NIF_PORT_NUM + QSFPDD_FAB_PORT_NUM);
                 ret = ufi_get_sfp_port_status_reg(port_id, &port_status_reg);
                 if (ret != ONLP_STATUS_OK) {
                     AIM_LOG_ERROR("ufi_get_sfp_port_status_reg() failed, port=%d\n", port_id);
@@ -1103,6 +1104,7 @@ int onlp_sfpi_control_get(onlp_oid_id_t id, onlp_sfp_control_t control,
                 return ONLP_STATUS_OK;
             }
             break;
+
         case ONLP_SFP_CONTROL_TX_FAULT:
             if (port_type == ONLP_SFP_TYPE_SFP) {
                 /**
@@ -1110,7 +1112,7 @@ int onlp_sfpi_control_get(onlp_oid_id_t id, onlp_sfp_control_t control,
                  * return 0: normal
                  * return 1: tx fault
                  */
-                port_id = local_id - (QSFP_PORT_NUM + QSFPDD_PORT_NUM);
+                port_id = local_id - (QSFP_NIF_PORT_NUM + QSFPDD_FAB_PORT_NUM);
                 ret = ufi_get_sfp_port_status_reg(port_id, &port_status_reg);
                 if (ret != ONLP_STATUS_OK) {
                     AIM_LOG_ERROR("ufi_get_sfp_port_status_reg() failed, port=%d\n", port_id);
@@ -1130,6 +1132,7 @@ int onlp_sfpi_control_get(onlp_oid_id_t id, onlp_sfp_control_t control,
                 return ONLP_STATUS_OK;
             }
             break;
+
         case ONLP_SFP_CONTROL_TX_DISABLE:
             if (port_type == ONLP_SFP_TYPE_SFP) {
                 /**
@@ -1137,7 +1140,7 @@ int onlp_sfpi_control_get(onlp_oid_id_t id, onlp_sfp_control_t control,
                  * return 0: turn on
                  * return 1: turn off
                  */
-                port_id = local_id - (QSFP_PORT_NUM + QSFPDD_PORT_NUM);
+                port_id = local_id - (QSFP_NIF_PORT_NUM + QSFPDD_FAB_PORT_NUM);
                 ret = ufi_get_sfp_port_config_reg(port_id, &port_config_reg);
                 if (ret != ONLP_STATUS_OK) {
                     AIM_LOG_ERROR("ufi_get_sfp_port_config_reg() failed, port=%d\n", port_id);
@@ -1157,6 +1160,7 @@ int onlp_sfpi_control_get(onlp_oid_id_t id, onlp_sfp_control_t control,
                 return ONLP_STATUS_OK;
             }
             break;
+
         case ONLP_SFP_CONTROL_LP_MODE:
             if (port_type == ONLP_SFP_TYPE_QSFP28) {
                 /**
@@ -1164,20 +1168,20 @@ int onlp_sfpi_control_get(onlp_oid_id_t id, onlp_sfp_control_t control,
                  * return 0: normal power mode
                  * return 1: low power mode
                  */
-                if (local_id < QSFP_PORT_NUM) { //QSFP
+                if (local_id < QSFP_NIF_PORT_NUM) { //QSFP
                     port_id = local_id;
-                    ret = ufi_get_qsfp_port_config_reg(port_id, &port_config_reg);
+                    ret = ufi_get_qsfp_nif_port_config_reg(port_id, &port_config_reg);
                     if (ret != ONLP_STATUS_OK) {
-                        AIM_LOG_ERROR("ufi_get_qsfp_port_config_reg() failed, port=%d\n", port_id);
+                        AIM_LOG_ERROR("ufi_get_qsfp_nif_port_config_reg() failed, port=%d\n", port_id);
                         return ret;
                     } else {
                         *value = (port_config_reg & 0b00000100) >> 2;
                     }
-                } else if (local_id >= QSFP_PORT_NUM && local_id < (QSFP_PORT_NUM + QSFPDD_PORT_NUM)) { //QSFPDD
-                    port_id = local_id - QSFP_PORT_NUM;
-                    ret = ufi_get_qsfpdd_port_config_reg(port_id, &port_config_reg);
+                } else if (local_id >= QSFP_NIF_PORT_NUM && local_id < (QSFP_NIF_PORT_NUM + QSFPDD_FAB_PORT_NUM)) { //QSFPDD
+                    port_id = local_id - QSFP_NIF_PORT_NUM;
+                    ret = ufi_get_qsfpdd_fab_port_config_reg(port_id, &port_config_reg);
                     if (ret != ONLP_STATUS_OK) {
-                        AIM_LOG_ERROR("ufi_get_qsfpdd_port_config_reg() failed, port=%d\n", port_id);
+                        AIM_LOG_ERROR("ufi_get_qsfpdd_fab_port_config_reg() failed, port=%d\n", port_id);
                         return ret;
                     } else {
                         *value = (port_config_reg & 0b00000100) >> 2;

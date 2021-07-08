@@ -92,36 +92,32 @@ static onlp_led_info_t __onlp_led_info[ONLP_LED_COUNT] =
  */
 static int update_ledi_info(int local_id, onlp_led_info_t* info)
 {
-    int ret = ONLP_STATUS_OK;
-    int value;
-    int sysfs_index;
-    int shift, led_val,led_val_color, led_val_blink, led_val_onoff;
+    int led_reg_value = 0;
+    int led_val_color = 0, led_val_blink = 0, led_val_onoff = 0;
 
     if (local_id == ONLP_LED_SYSTEM) {
-        sysfs_index = 0;
-        shift = 4;
+        ONLP_TRY(file_read_hex(&led_reg_value, "/sys/bus/i2c/devices/1-0030/cpld_system_led_0"));
+        led_val_color = (led_reg_value & 0b00010000) >> 4; //1: Green,    0: Yellow
+        led_val_blink = (led_reg_value & 0b01000000) >> 6; //1: Blinking, 0: Solid
+        led_val_onoff = (led_reg_value & 0b10000000) >> 7; //1: On,       0: Off
     } else if (local_id == ONLP_LED_PSU0) {
-        sysfs_index = 1;
-        shift = 0;
+        ONLP_TRY(file_read_hex(&led_reg_value, "/sys/bus/i2c/devices/1-0030/cpld_system_led_1"));
+        led_val_color = (led_reg_value & 0b00000001) >> 0; //1: Green, 0: Yellow
+        led_val_blink = (led_reg_value & 0b00000100) >> 2; //1: Blinking, 0: Solid
+        led_val_onoff = (led_reg_value & 0b00001000) >> 3; //1: On,       0: Off
     } else if (local_id == ONLP_LED_PSU1) {
-        sysfs_index = 1;
-        shift = 4;
+        ONLP_TRY(file_read_hex(&led_reg_value, "/sys/bus/i2c/devices/1-0030/cpld_system_led_1"));
+        led_val_color = (led_reg_value & 0b00010000) >> 4; //1: Green, 0: Yellow
+        led_val_blink = (led_reg_value & 0b01000000) >> 6; //1: Blinking, 0: Solid
+        led_val_onoff = (led_reg_value & 0b10000000) >> 7; //1: On,       0: Off
     } else if (local_id == ONLP_LED_FAN) {
-        sysfs_index = 0;
-        shift = 0;
+        ONLP_TRY(file_read_hex(&led_reg_value, "/sys/bus/i2c/devices/1-0030/cpld_system_led_0"));
+        led_val_color = (led_reg_value & 0b00000001) >> 0; //1: Green, 0: Yellow
+        led_val_blink = (led_reg_value & 0b00000100) >> 2; //1: Blinking, 0: Solid
+        led_val_onoff = (led_reg_value & 0b00001000) >> 3; //1: On,       0: Off
     } else {
         return ONLP_STATUS_E_INTERNAL;
     }
-    
-    ret = file_read_hex(&value, "/sys/bus/i2c/devices/1-0030/cpld_system_led_%d", sysfs_index);
-    if (ret != ONLP_STATUS_OK) {
-        return ONLP_STATUS_E_INTERNAL;
-    }
-
-    led_val = (value >> shift);
-    led_val_color = (led_val >> 0) & 1;
-    led_val_blink = (led_val >> 2) & 1;
-    led_val_onoff = (led_val >> 3) & 1;
 
     //onoff
     if (led_val_onoff == 0) { 

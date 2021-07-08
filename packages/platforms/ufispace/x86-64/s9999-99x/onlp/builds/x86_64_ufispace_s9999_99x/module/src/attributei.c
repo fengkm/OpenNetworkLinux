@@ -764,6 +764,7 @@ static int _sysi_onie_crc_32_get(uint32_t* crc_32)
     return ONLP_STATUS_OK;
 }
 
+
 static int _sysi_onie_info_total_len_get(onlp_onie_info_t *onie, uint16_t *total_len)
 {
     uint16_t len = 0;
@@ -860,7 +861,6 @@ static int _sysi_onie_info_total_len_get(onlp_onie_info_t *onie, uint16_t *total
     *total_len = len;
     return ONLP_STATUS_OK;
 }
-
 
 
 const char* onlp_sysi_platform_get(void)

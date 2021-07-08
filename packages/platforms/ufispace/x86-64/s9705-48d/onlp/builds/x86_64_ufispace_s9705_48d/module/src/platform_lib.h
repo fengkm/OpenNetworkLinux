@@ -28,6 +28,199 @@
 
 #include "x86_64_ufispace_s9705_48d_log.h"
 
+/* This is definitions for x86-64-ufispace-s9705-48d */
+/* OID map*/
+/*
+ * [01] CHASSIS----[01] ONLP_THERMAL_CPU_PECI
+ *            |----[02] ONLP_THERMAL_RAMON_ENV_T
+ *            |----[03] ONLP_THERMAL_RAMON_DIE_T
+ *            |----[04] ONLP_THERMAL_RAMON_ENV_B
+ *            |----[05] ONLP_THERMAL_RAMON_DIE_B
+ *            |----[08] ONLP_THERMAL_CPU_PKG
+ *            |----[09] ONLP_THERMAL_CPU1
+ *            |----[10] ONLP_THERMAL_CPU2
+ *            |----[11] ONLP_THERMAL_CPU3
+ *            |----[12] ONLP_THERMAL_CPU4
+ *            |----[13] ONLP_THERMAL_CPU5
+ *            |----[14] ONLP_THERMAL_CPU6
+ *            |----[15] ONLP_THERMAL_CPU7
+ *            |----[16] ONLP_THERMAL_CPU8
+ *            |----[17] ONLP_THERMAL_CPU_BOARD
+ *            |----[18] ONLP_THERMAL_BMC_ENV
+ *            |----[19] ONLP_THERMAL_ENV_FRONT_T
+ *            |----[20] ONLP_THERMAL_ENV_FRONT_B
+ *            |----[01] ONLP_FAN_1
+ *            |----[02] ONLP_FAN_2
+ *            |----[03] ONLP_FAN_3
+ *            |----[04] ONLP_FAN_4
+ *            |----[01] ONLP_PSU_0----[06] ONLP_THERMAL_PSU0
+ *            |                  |----[05] ONLP_PSU0_FAN_1
+ *            |                  |----[06] ONLP_PSU0_FAN_2
+ *            |
+ *            |----[02] ONLP_PSU_1----[07] ONLP_THERMAL_PSU1
+ *            |                  |----[07] ONLP_PSU1_FAN_1
+ *            |                  |----[08] ONLP_PSU1_FAN_2
+ *            |
+ *            |----[01] ONLP_LED_SYSTEM
+ *            |----[02] ONLP_LED_PSU0
+ *            |----[03] ONLP_LED_PSU1
+ *            |----[04] ONLP_LED_FAN
+ */
+
+
+/* Thermal definitions*/
+enum onlp_thermal_id {
+    ONLP_THERMAL_RESERVED    = 0,
+    ONLP_THERMAL_CPU_PECI    = 1,
+    ONLP_THERMAL_RAMON_ENV_T = 2,
+    ONLP_THERMAL_RAMON_DIE_T = 3,
+    ONLP_THERMAL_RAMON_ENV_B = 4,
+    ONLP_THERMAL_RAMON_DIE_B = 5,
+    ONLP_THERMAL_PSU0        = 6,
+    ONLP_THERMAL_PSU1        = 7,
+    ONLP_THERMAL_CPU_PKG     = 8,
+    ONLP_THERMAL_CPU1        = 9,
+    ONLP_THERMAL_CPU2        = 10,
+    ONLP_THERMAL_CPU3        = 11,
+    ONLP_THERMAL_CPU4        = 12,
+    ONLP_THERMAL_CPU5        = 13,
+    ONLP_THERMAL_CPU6        = 14,
+    ONLP_THERMAL_CPU7        = 15,
+    ONLP_THERMAL_CPU8        = 16,
+    ONLP_THERMAL_CPU_BOARD   = 17,
+    ONLP_THERMAL_BMC_ENV     = 18,
+    ONLP_THERMAL_ENV_FRONT_T = 19,
+    ONLP_THERMAL_ENV_FRONT_B = 20,
+    ONLP_THERMAL_MAX         = ONLP_THERMAL_ENV_FRONT_B+1,
+};
+
+#define ONLP_THERMAL_COUNT ONLP_THERMAL_MAX /*include "reserved"*/
+
+
+/* Fan definitions*/
+enum onlp_fan_id {
+    ONLP_FAN_RESERVED = 0,
+	ONLP_FAN_1        = 1,
+    ONLP_FAN_2        = 2,
+    ONLP_FAN_3        = 3,
+    ONLP_FAN_4        = 4,
+    ONLP_PSU0_FAN_1   = 5,
+    ONLP_PSU0_FAN_2   = 6,
+    ONLP_PSU1_FAN_1   = 7,
+    ONLP_PSU1_FAN_2   = 8,
+	ONLP_FAN_MAX      = ONLP_PSU1_FAN_2+1,
+};
+
+#define ONLP_FAN_COUNT ONLP_FAN_MAX /*include "reserved"*/
+
+/* PSU definitions*/
+enum onlp_psu_id {
+    ONLP_PSU_RESERVED  = 0,
+    ONLP_PSU_0         = 1,
+    ONLP_PSU_1         = 2,
+    ONLP_PSU_0_VIN     = 3,
+    ONLP_PSU_0_VOUT    = 4,
+    ONLP_PSU_0_IIN     = 5,
+    ONLP_PSU_0_IOUT    = 6,
+    ONLP_PSU_0_STBVOUT = 7,
+    ONLP_PSU_0_STBIOUT = 8,
+    ONLP_PSU_1_VIN     = 9,
+    ONLP_PSU_1_VOUT    = 10,
+    ONLP_PSU_1_IIN     = 11,
+    ONLP_PSU_1_IOUT    = 12,
+    ONLP_PSU_1_STBVOUT = 13,
+    ONLP_PSU_1_STBIOUT = 14,
+    ONLP_PSU_MAX       = ONLP_PSU_1+1,
+};
+
+#define ONLP_PSU_COUNT ONLP_PSU_MAX /*include "reserved"*/
+
+
+/* LED definitions*/
+enum onlp_led_id {
+    ONLP_LED_RESERVED  = 0,
+    ONLP_LED_SYSTEM    = 1,
+    ONLP_LED_PSU0      = 2,
+    ONLP_LED_PSU1      = 3,
+    ONLP_LED_FAN       = 4,
+    //ONLP_LED_FAN_TRAY1 = 5,
+    //ONLP_LED_FAN_TRAY2 = 6,
+    //ONLP_LED_FAN_TRAY3 = 7,
+    //ONLP_LED_FAN_TRAY4 = 8,
+    ONLP_LED_MAX       = ONLP_LED_FAN+1,
+};
+
+#define ONLP_LED_COUNT ONLP_LED_MAX /*include "reserved"*/
+
+
+#define CPLD_MAX 4  //Number of MB CPLD
+extern const int CPLD_BASE_ADDR[CPLD_MAX];
+
+/* For BMC Cached Mechanism */
+enum bmc_attr_id {
+    BMC_ATTR_ID_TEMP_CPU_PECI     = 0,
+    BMC_ATTR_ID_TEMP_RAMON_ENV_T  = 1,
+    BMC_ATTR_ID_TEMP_RAMON_DIE_T  = 2,
+    BMC_ATTR_ID_TEMP_RAMON_ENV_B  = 3,
+    BMC_ATTR_ID_TEMP_RAMON_DIE_B  = 4,
+    BMC_ATTR_ID_PSU0_TEMP         = 5,
+    BMC_ATTR_ID_PSU1_TEMP         = 6,
+    BMC_ATTR_ID_TEMP_BMC_ENV      = 7,
+    BMC_ATTR_ID_TEMP_ENV_FRONT_T  = 8,
+    BMC_ATTR_ID_TEMP_ENV_FRONT_B  = 9,
+    BMC_ATTR_ID_FAN0_RPM          = 10,
+    BMC_ATTR_ID_FAN1_RPM          = 11,
+    BMC_ATTR_ID_FAN2_RPM          = 12,
+    BMC_ATTR_ID_FAN3_RPM          = 13,
+    BMC_ATTR_ID_PSU0_FAN1         = 14,
+    BMC_ATTR_ID_PSU0_FAN2         = 15,
+    BMC_ATTR_ID_PSU1_FAN1         = 16,
+    BMC_ATTR_ID_PSU1_FAN2         = 17,
+    BMC_ATTR_ID_FAN0_PRSNT_H      = 18,
+    BMC_ATTR_ID_FAN1_PRSNT_H      = 19,
+    BMC_ATTR_ID_FAN2_PRSNT_H      = 20,
+    BMC_ATTR_ID_FAN3_PRSNT_H      = 21,
+    BMC_ATTR_ID_PSU0_VIN          = 22,
+    BMC_ATTR_ID_PSU0_VOUT         = 23,
+    BMC_ATTR_ID_PSU0_IIN          = 24,
+    BMC_ATTR_ID_PSU0_IOUT         = 25,
+    BMC_ATTR_ID_PSU0_STBVOUT      = 26,
+    BMC_ATTR_ID_PSU0_STBIOUT      = 27,
+    BMC_ATTR_ID_PSU1_VIN          = 28,
+    BMC_ATTR_ID_PSU1_VOUT         = 29,
+    BMC_ATTR_ID_PSU1_IIN          = 30,
+    BMC_ATTR_ID_PSU1_IOUT         = 31,
+    BMC_ATTR_ID_PSU1_STBVOUT      = 32,
+    BMC_ATTR_ID_PSU1_STBIOUT      = 33,
+};
+
+enum sensor
+{
+    FAN_SENSOR = 0,
+    PSU_SENSOR,
+    THERMAL_SENSOR,
+};
+
+typedef struct bmc_info_s
+{
+    char name[20];
+    float data;
+}bmc_info_t;
+
+
+void lock_init();
+int check_file_exist(char *file_path, long *file_time);
+int bmc_cache_expired_check(long last_time, long new_time, int cache_time);
+int bmc_sensor_read(int bmc_cache_index, int sensor_type, float *data);
+int read_ioport(int addr, int *reg_val);
+int exec_cmd(char *cmd, char* out, int size);
+int get_ipmitool_len(char *ipmitool_out) ;
+bool onlp_sysi_bmc_en_get(void);
+int parse_bmc_sdr_cmd(char *cmd_out, int cmd_out_size, char *tokens[], int token_size, const char *sensor_id_str, int *idx);
+int file_read_hex(int* value, const char* fmt, ...);
+int file_vread_hex(int* value, const char* fmt, va_list vargs);
+int get_psu_present_status(int local_id);
+void check_and_do_i2c_mux_reset(int port);
 
 
 #endif  /* __PLATFORM_LIB_H__ */

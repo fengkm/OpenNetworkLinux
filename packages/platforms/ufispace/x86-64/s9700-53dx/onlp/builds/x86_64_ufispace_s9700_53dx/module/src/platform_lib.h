@@ -47,6 +47,9 @@
  *            |----[16] ONLP_THERMAL_CPU7
  *            |----[17] ONLP_THERMAL_CPU8
  *            |----[18] ONLP_THERMAL_CPU_BOARD
+ *            |----[19] ONLP_THERMAL_BMC_ENV
+ *            |----[20] ONLP_THERMAL_ENV
+ *            |----[21] ONLP_THERMAL_ENV_FRONT
  *            |----[01] ONLP_FAN_1
  *            |----[02] ONLP_FAN_2
  *            |----[03] ONLP_FAN_3
@@ -154,6 +157,45 @@ enum onlp_led_id {
 
 #define CPLD_MAX 5  //Number of MB CPLD
 extern const int CPLD_BASE_ADDR[CPLD_MAX];
+
+/* For BMC Cached Mechanism */
+enum bmc_attr_id {
+    BMC_ATTR_ID_TEMP_CPU_PECI  = 0,
+    BMC_ATTR_ID_TEMP_OP2_ENV   = 1,
+    BMC_ATTR_ID_TEMP_J2_ENV_1  = 2,
+    BMC_ATTR_ID_TEMP_J2_DIE_1  = 3,
+    BMC_ATTR_ID_TEMP_J2_ENV_2  = 4,
+    BMC_ATTR_ID_TEMP_J2_DIE_2  = 5,
+    BMC_ATTR_ID_PSU0_TEMP      = 6,
+    BMC_ATTR_ID_PSU1_TEMP      = 7,
+    BMC_ATTR_ID_TEMP_BMC_ENV   = 8,
+    BMC_ATTR_ID_TEMP_ENV       = 9,
+    BMC_ATTR_ID_TEMP_ENV_FRONT = 10,
+    BMC_ATTR_ID_FAN0_RPM       = 11,
+    BMC_ATTR_ID_FAN1_RPM       = 12,
+    BMC_ATTR_ID_FAN2_RPM       = 13,
+    BMC_ATTR_ID_FAN3_RPM       = 14,
+    BMC_ATTR_ID_PSU0_FAN1      = 15,
+    BMC_ATTR_ID_PSU0_FAN2      = 16,
+    BMC_ATTR_ID_PSU1_FAN1      = 17,
+    BMC_ATTR_ID_PSU1_FAN2      = 18,
+    BMC_ATTR_ID_FAN0_PRSNT_H   = 19,
+    BMC_ATTR_ID_FAN1_PRSNT_H   = 20,
+    BMC_ATTR_ID_FAN2_PRSNT_H   = 21,
+    BMC_ATTR_ID_FAN3_PRSNT_H   = 22,
+    BMC_ATTR_ID_PSU0_VIN       = 23,
+    BMC_ATTR_ID_PSU0_VOUT      = 24,
+    BMC_ATTR_ID_PSU0_IIN       = 25,
+    BMC_ATTR_ID_PSU0_IOUT      = 26,
+    BMC_ATTR_ID_PSU0_STBVOUT   = 27,
+    BMC_ATTR_ID_PSU0_STBIOUT   = 28,
+    BMC_ATTR_ID_PSU1_VIN       = 29,
+    BMC_ATTR_ID_PSU1_VOUT      = 30,
+    BMC_ATTR_ID_PSU1_IIN       = 31,
+    BMC_ATTR_ID_PSU1_IOUT      = 32,
+    BMC_ATTR_ID_PSU1_STBVOUT   = 33,
+    BMC_ATTR_ID_PSU1_STBIOUT   = 34,
+};
 
 enum sensor
 {

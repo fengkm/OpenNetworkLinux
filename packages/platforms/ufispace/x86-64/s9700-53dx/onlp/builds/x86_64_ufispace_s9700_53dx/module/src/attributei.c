@@ -78,7 +78,6 @@ typedef struct sysi_onie_vpd_s {
     char file[ONLP_CONFIG_INFO_STR_MAX*2];
 } sysi_onie_vpd_t;
 
-
 #define CMD_BIOS_VER  "dmidecode -s bios-version | tail -1 | tr -d '\r\n'"
 #define CMD_BMC_VER_1 "expr `ipmitool mc info | grep 'Firmware Revision' | cut -d':' -f2 | cut -d'.' -f1` + 0"
 #define CMD_BMC_VER_2 "expr `ipmitool mc info | grep 'Firmware Revision' | cut -d':' -f2 | cut -d'.' -f2` + 0"
@@ -769,6 +768,7 @@ static int _sysi_onie_crc_32_get(uint32_t* crc_32)
     return ONLP_STATUS_OK;
 }
 
+
 static int _sysi_onie_info_total_len_get(onlp_onie_info_t *onie, uint16_t *total_len)
 {
     uint16_t len = 0;
@@ -867,9 +867,7 @@ static int _sysi_onie_info_total_len_get(onlp_onie_info_t *onie, uint16_t *total
 }
 
 
-
-const char*
-onlp_sysi_platform_get(void)
+const char* onlp_sysi_platform_get(void)
 {
     return "x86-64-ufispace-s9700-53dx-r0";
 }
@@ -889,8 +887,7 @@ onlp_sysi_platform_get(void)
  * return UNSUPPORTED (which is all the default implementation does).
  *
  */
-int
-onlp_sysi_onie_data_phys_addr_get(void** pa)
+int onlp_sysi_onie_data_phys_addr_get(void** pa)
 {
     return ONLP_STATUS_E_UNSUPPORTED;
 }
@@ -903,8 +900,7 @@ onlp_sysi_onie_data_phys_addr_get(void** pa)
  * This function will be called as a backup in the event that
  * onlp_sysi_onie_data_phys_addr_get() fails.
  */
-int
-onlp_sysi_onie_data_get(uint8_t** data, int* size)
+int onlp_sysi_onie_data_get(uint8_t** data, int* size)
 {
 #if 0
     int ret;
@@ -1009,8 +1005,7 @@ static int __onlp_sysi_onie_info_get (onlp_onie_info_t *onie_info)
     return ret;
 }
 
-static int
-parse_ucd_out(char *ucd_out, char *ucd_data, int start, int len){
+static int parse_ucd_out(char *ucd_out, char *ucd_data, int start, int len){
     int i=0; 
     char data[3];
 

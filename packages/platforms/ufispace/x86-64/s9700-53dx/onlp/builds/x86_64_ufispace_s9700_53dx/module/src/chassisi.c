@@ -140,6 +140,7 @@ int onlp_chassisi_sw_denit(void)
 int onlp_chassisi_hdr_get(onlp_oid_id_t id, onlp_oid_hdr_t* hdr)
 {
     int i;
+
     ONLP_OID_STATUS_FLAG_SET(hdr, PRESENT);
     ONLP_OID_STATUS_FLAG_SET(hdr, OPERATIONAL);
 

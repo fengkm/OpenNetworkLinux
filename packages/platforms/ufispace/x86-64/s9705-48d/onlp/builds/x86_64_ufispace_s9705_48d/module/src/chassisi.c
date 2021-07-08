@@ -25,6 +25,83 @@
 #include <onlp/platformi/chassisi.h>
 #include "platform_lib.h"
 
+/* This is definitions for x86-64-ufispace-s9705-48d */
+/* OID map*/
+/*
+ * [01] CHASSIS----[01] ONLP_THERMAL_CPU_PECI
+ *            |----[02] ONLP_THERMAL_RAMON_ENV_T
+ *            |----[03] ONLP_THERMAL_RAMON_DIE_T
+ *            |----[04] ONLP_THERMAL_RAMON_ENV_B
+ *            |----[05] ONLP_THERMAL_RAMON_DIE_B
+ *            |----[08] ONLP_THERMAL_CPU_PKG
+ *            |----[09] ONLP_THERMAL_CPU1
+ *            |----[10] ONLP_THERMAL_CPU2
+ *            |----[11] ONLP_THERMAL_CPU3
+ *            |----[12] ONLP_THERMAL_CPU4
+ *            |----[13] ONLP_THERMAL_CPU5
+ *            |----[14] ONLP_THERMAL_CPU6
+ *            |----[15] ONLP_THERMAL_CPU7
+ *            |----[16] ONLP_THERMAL_CPU8
+ *            |----[17] ONLP_THERMAL_CPU_BOARD
+ *            |----[01] ONLP_FAN_1
+ *            |----[02] ONLP_FAN_2
+ *            |----[03] ONLP_FAN_3
+ *            |----[04] ONLP_FAN_4
+ *            |----[01] ONLP_PSU_0----[07] ONLP_THERMAL_PSU0
+ *            |                  |----[05] ONLP_PSU0_FAN_1
+ *            |                  |----[06] ONLP_PSU0_FAN_2
+ *            |
+ *            |----[02] ONLP_PSU_1----[08] ONLP_THERMAL_PSU1
+ *            |                  |----[07] ONLP_PSU1_FAN_1
+ *            |                  |----[08] ONLP_PSU1_FAN_2
+ *            |
+ *            |----[01] ONLP_LED_SYSTEM
+ *            |----[02] ONLP_LED_PSU0
+ *            |----[03] ONLP_LED_PSU1
+ *            |----[04] ONLP_LED_FAN
+ */
+static onlp_oid_t __onlp_oid_info[] = {
+    ONLP_THERMAL_ID_CREATE(ONLP_THERMAL_CPU_PECI),
+    ONLP_THERMAL_ID_CREATE(ONLP_THERMAL_RAMON_ENV_T),
+    ONLP_THERMAL_ID_CREATE(ONLP_THERMAL_RAMON_DIE_T),
+    ONLP_THERMAL_ID_CREATE(ONLP_THERMAL_RAMON_ENV_B),
+    ONLP_THERMAL_ID_CREATE(ONLP_THERMAL_RAMON_DIE_B),
+    //ONLP_THERMAL_ID_CREATE(ONLP_THERMAL_PSU0),
+    //ONLP_THERMAL_ID_CREATE(ONLP_THERMAL_PSU1),
+    ONLP_THERMAL_ID_CREATE(ONLP_THERMAL_CPU_PKG),
+    ONLP_THERMAL_ID_CREATE(ONLP_THERMAL_CPU1),
+    ONLP_THERMAL_ID_CREATE(ONLP_THERMAL_CPU2),
+    ONLP_THERMAL_ID_CREATE(ONLP_THERMAL_CPU3),
+    ONLP_THERMAL_ID_CREATE(ONLP_THERMAL_CPU4),
+    ONLP_THERMAL_ID_CREATE(ONLP_THERMAL_CPU5),
+    ONLP_THERMAL_ID_CREATE(ONLP_THERMAL_CPU6),
+    ONLP_THERMAL_ID_CREATE(ONLP_THERMAL_CPU7),
+    ONLP_THERMAL_ID_CREATE(ONLP_THERMAL_CPU8),
+    ONLP_THERMAL_ID_CREATE(ONLP_THERMAL_CPU_BOARD),
+    //ONLP_THERMAL_ID_CREATE(ONLP_THERMAL_BMC_ENV),
+    //ONLP_THERMAL_ID_CREATE(ONLP_THERMAL_ENV_FRONT_T),
+    //ONLP_THERMAL_ID_CREATE(ONLP_THERMAL_ENV_FRONT_B),
+    ONLP_FAN_ID_CREATE(ONLP_FAN_1),
+    ONLP_FAN_ID_CREATE(ONLP_FAN_2),
+    ONLP_FAN_ID_CREATE(ONLP_FAN_3),
+    ONLP_FAN_ID_CREATE(ONLP_FAN_4),
+    //ONLP_FAN_ID_CREATE(ONLP_PSU0_FAN_1),
+    //ONLP_FAN_ID_CREATE(ONLP_PSU0_FAN_2),
+    //ONLP_FAN_ID_CREATE(ONLP_PSU1_FAN_1),
+    //ONLP_FAN_ID_CREATE(ONLP_PSU1_FAN_2),
+    ONLP_PSU_ID_CREATE(ONLP_PSU_0),
+    ONLP_PSU_ID_CREATE(ONLP_PSU_1),
+    ONLP_LED_ID_CREATE(ONLP_LED_SYSTEM),
+    ONLP_LED_ID_CREATE(ONLP_LED_PSU0),
+    ONLP_LED_ID_CREATE(ONLP_LED_PSU1),
+    ONLP_LED_ID_CREATE(ONLP_LED_FAN),
+    //ONLP_LED_ID_CREATE(ONLP_LED_FAN_TRAY1),
+    //ONLP_LED_ID_CREATE(ONLP_LED_FAN_TRAY2),
+    //ONLP_LED_ID_CREATE(ONLP_LED_FAN_TRAY3),
+    //ONLP_LED_ID_CREATE(ONLP_LED_FAN_TRAY4),
+};
+
+
 /**
  * @brief Software initializaiton of the Chassis module.
  */
@@ -60,5 +137,20 @@ int onlp_chassisi_sw_denit(void)
  */
 int onlp_chassisi_hdr_get(onlp_oid_id_t id, onlp_oid_hdr_t* hdr)
 {
+    int i;
+
+    ONLP_OID_STATUS_FLAG_SET(hdr, PRESENT);
+    ONLP_OID_STATUS_FLAG_SET(hdr, OPERATIONAL);
+
+    memcpy(hdr->coids, __onlp_oid_info, sizeof(__onlp_oid_info));
+
+    /** Add 48 QSFPDD Fabric OIDs after the static table */
+    onlp_oid_t* e = hdr->coids + AIM_ARRAYSIZE(__onlp_oid_info);
+
+    /* 48 QSFPDD Fabric + 2 SFP+ */
+    for(i = 1; i <= 50; i++) {
+        *e++ = ONLP_SFP_ID_CREATE(i);
+    }
+
     return ONLP_STATUS_OK;
 }

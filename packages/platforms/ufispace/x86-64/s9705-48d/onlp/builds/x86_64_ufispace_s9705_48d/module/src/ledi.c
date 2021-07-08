@@ -33,10 +33,121 @@
 #include "platform_lib.h"
 
 /**
+ * Get the information for the given LED OID.
+ * 
+ * [01] CHASSIS----[01] ONLP_LED_SYSTEM
+ *            |----[02] ONLP_LED_PSU0
+ *            |----[03] ONLP_LED_PSU1
+ *            |----[04] ONLP_LED_FAN
+ */
+static onlp_led_info_t __onlp_led_info[ONLP_LED_COUNT] =
+{
+    { }, /* Not used */
+    {
+        .hdr = {
+            .id = ONLP_LED_ID_CREATE(ONLP_LED_SYSTEM),
+            .description = "Chassis LED 1 (SYS LED)",
+            .poid = ONLP_OID_CHASSIS,
+            .status = ONLP_OID_STATUS_FLAG_PRESENT,
+        },
+        .caps = ONLP_LED_CAPS_OFF | ONLP_LED_CAPS_YELLOW | ONLP_LED_CAPS_YELLOW_BLINKING |
+                ONLP_LED_CAPS_GREEN | ONLP_LED_CAPS_GREEN_BLINKING,
+    },
+    {
+        .hdr = {
+            .id = ONLP_LED_ID_CREATE(ONLP_LED_PSU0),
+            .description = "Chassis LED 2 (PSU1 LED)",
+            .poid = ONLP_OID_CHASSIS,
+            .status = ONLP_OID_STATUS_FLAG_PRESENT,
+        },
+        .caps = ONLP_LED_CAPS_OFF | ONLP_LED_CAPS_YELLOW | ONLP_LED_CAPS_YELLOW_BLINKING |
+                ONLP_LED_CAPS_GREEN | ONLP_LED_CAPS_GREEN_BLINKING,
+    },
+    {
+        .hdr = {
+            .id = ONLP_LED_ID_CREATE(ONLP_LED_PSU1),
+            .description = "Chassis LED 3 (PSU2 LED)",
+            .poid = ONLP_OID_CHASSIS,
+            .status = ONLP_OID_STATUS_FLAG_PRESENT,
+        },
+        .caps = ONLP_LED_CAPS_OFF | ONLP_LED_CAPS_YELLOW | ONLP_LED_CAPS_YELLOW_BLINKING |
+                ONLP_LED_CAPS_GREEN | ONLP_LED_CAPS_GREEN_BLINKING,
+    },
+    {
+        .hdr = {
+            .id = ONLP_LED_ID_CREATE(ONLP_LED_FAN),
+            .description = "Chassis LED 4 (FAN LED)",
+            .poid = ONLP_OID_CHASSIS,
+            .status = ONLP_OID_STATUS_FLAG_PRESENT,
+        },
+        .caps = ONLP_LED_CAPS_OFF | ONLP_LED_CAPS_YELLOW | ONLP_LED_CAPS_YELLOW_BLINKING |
+                ONLP_LED_CAPS_GREEN | ONLP_LED_CAPS_GREEN_BLINKING,
+    },
+};
+
+/**
+ * @brief Update the information structure for the given LED
+ * @param id The LED Local ID
+ * @param[out] info Receives the FAN information.
+ */
+static int update_ledi_info(int local_id, onlp_led_info_t* info)
+{
+    int led_reg_value = 0;
+    int led_val_color = 0, led_val_blink = 0, led_val_onoff = 0;
+
+    if (local_id == ONLP_LED_SYSTEM) {
+        ONLP_TRY(file_read_hex(&led_reg_value, "/sys/bus/i2c/devices/2-0030/cpld_system_led_0"));
+        led_val_color = (led_reg_value & 0b00010000) >> 4; //1: Green,    0: Yellow
+        led_val_blink = (led_reg_value & 0b01000000) >> 6; //1: Blinking, 0: Solid
+        led_val_onoff = (led_reg_value & 0b10000000) >> 7; //1: On,       0: Off
+    } else if (local_id == ONLP_LED_PSU0) {
+        ONLP_TRY(file_read_hex(&led_reg_value, "/sys/bus/i2c/devices/2-0030/cpld_system_led_1"));
+        led_val_color = (led_reg_value & 0b00000001) >> 0; //1: Green, 0: Yellow
+        led_val_blink = (led_reg_value & 0b00000100) >> 2; //1: Blinking, 0: Solid
+        led_val_onoff = (led_reg_value & 0b00001000) >> 3; //1: On,       0: Off
+    } else if (local_id == ONLP_LED_PSU1) {
+        ONLP_TRY(file_read_hex(&led_reg_value, "/sys/bus/i2c/devices/2-0030/cpld_system_led_1"));
+        led_val_color = (led_reg_value & 0b00010000) >> 4; //1: Green, 0: Yellow
+        led_val_blink = (led_reg_value & 0b01000000) >> 6; //1: Blinking, 0: Solid
+        led_val_onoff = (led_reg_value & 0b10000000) >> 7; //1: On,       0: Off
+    } else if (local_id == ONLP_LED_FAN) {
+        ONLP_TRY(file_read_hex(&led_reg_value, "/sys/bus/i2c/devices/2-0030/cpld_system_led_0"));
+        led_val_color = (led_reg_value & 0b00000001) >> 0; //1: Green, 0: Yellow
+        led_val_blink = (led_reg_value & 0b00000100) >> 2; //1: Blinking, 0: Solid
+        led_val_onoff = (led_reg_value & 0b00001000) >> 3; //1: On,       0: Off
+    } else {
+        return ONLP_STATUS_E_INTERNAL;
+    }
+
+    //onoff
+    if (led_val_onoff == 0) {
+        info->mode = ONLP_LED_MODE_OFF;
+    } else {
+        //color
+        if (led_val_color == 0) {
+            if (led_val_blink == 1) {
+                info->mode = ONLP_LED_MODE_YELLOW_BLINKING;
+            } else {
+                info->mode = ONLP_LED_MODE_YELLOW;
+            }
+        } else {
+            if (led_val_blink == 1) {
+                info->mode = ONLP_LED_MODE_GREEN_BLINKING;
+            } else {
+                info->mode = ONLP_LED_MODE_GREEN;
+            }
+        }
+    }
+
+    return ONLP_STATUS_OK;
+}
+
+/**
  * @brief Software initialization of the LED module.
  */
 int onlp_ledi_sw_init(void)
 {
+    lock_init();
     return ONLP_STATUS_OK;
 }
 
@@ -66,7 +177,7 @@ int onlp_ledi_sw_denit(void)
  */
 int onlp_ledi_id_validate(onlp_oid_id_t id)
 {
-    return ONLP_STATUS_OK;
+    return ONLP_OID_ID_VALIDATE_RANGE(id, 1, ONLP_LED_MAX-1);
 }
 
 /**
@@ -76,7 +187,13 @@ int onlp_ledi_id_validate(onlp_oid_id_t id)
  */
 int onlp_ledi_hdr_get(onlp_oid_t id, onlp_oid_hdr_t* hdr)
 {
-    return ONLP_STATUS_OK;
+    int ret = ONLP_STATUS_OK;
+    int local_id = ONLP_OID_ID_GET(id);
+
+    /* Set the onlp_led_info_t */
+    *hdr = __onlp_led_info[local_id].hdr;
+
+    return ret;
 }
 
 /**
@@ -86,7 +203,23 @@ int onlp_ledi_hdr_get(onlp_oid_t id, onlp_oid_hdr_t* hdr)
  */
 int onlp_ledi_info_get(onlp_oid_id_t id, onlp_led_info_t* info)
 {
-    return ONLP_STATUS_OK;
+    int ret = ONLP_STATUS_OK;
+    int local_id = ONLP_OID_ID_GET(id);
+
+    /* Set the onlp_led_info_t */
+    memset(info, 0, sizeof(onlp_led_info_t));
+    *info = __onlp_led_info[local_id];
+    ONLP_TRY(onlp_ledi_hdr_get(id, &info->hdr));
+
+    //get ledi info
+    if (local_id >= ONLP_LED_SYSTEM && local_id <= ONLP_LED_FAN) {
+        ret = update_ledi_info(local_id, info);
+    } else {
+        AIM_LOG_ERROR("unknown LED id (%d), func=%s\n", local_id, __FUNCTION__);
+        ret = ONLP_STATUS_E_PARAM;
+    }
+
+    return ret;
 }
 
 /**
@@ -96,6 +229,10 @@ int onlp_ledi_info_get(onlp_oid_id_t id, onlp_led_info_t* info)
  */
 int onlp_ledi_caps_get(onlp_oid_id_t id, uint32_t* rv)
 {
+    int local_id = ONLP_OID_ID_GET(id);
+
+    *rv = __onlp_led_info[local_id].caps;
+
     return ONLP_STATUS_OK;
 }
 

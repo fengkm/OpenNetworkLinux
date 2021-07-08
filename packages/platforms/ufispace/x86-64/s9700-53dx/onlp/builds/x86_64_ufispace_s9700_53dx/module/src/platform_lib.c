@@ -45,113 +45,90 @@
 #define FAN_CACHE_TIME          5
 #define PSU_CACHE_TIME          5
 #define THERMAL_CACHE_TIME      10
-#define BMC_SENSOR_CACHE            "/tmp/bmc_sensor_cache"
 #define BMC_CMD_SDR_SIZE        48
-#define CMD_BMC_SDR_GET             "ipmitool sdr -c get %s"
-#define CMD_BMC_SENSOR_CACHE        "ipmitool sdr -c get TEMP_CPU_PECI TEMP_OP2_ENV TEMP_J2_ENV_1 TEMP_J2_DIE_1 TEMP_J2_ENV_2 TEMP_J2_DIE_2 PSU0_TEMP PSU1_TEMP FAN0_RPM FAN1_RPM FAN2_RPM FAN3_RPM PSU0_FAN1 PSU0_FAN2 PSU1_FAN1 PSU1_FAN2 FAN0_PRSNT_H FAN1_PRSNT_H FAN2_PRSNT_H FAN3_PRSNT_H PSU0_VIN PSU0_VOUT PSU0_IIN PSU0_IOUT PSU0_STBVOUT PSU0_STBIOUT PSU1_VIN PSU1_VOUT PSU1_IIN PSU1_IOUT PSU1_STBVOUT PSU1_STBIOUT > /tmp/bmc_sensor_cache"
-#define CMD_BMC_CACHE_GET           "cat "BMC_SENSOR_CACHE" | grep %s | awk -F',' '{print $%d}'"
+#define BMC_SENSOR_CACHE        "/tmp/bmc_sensor_cache"
+#define CMD_BMC_CACHE_GET       "cat "BMC_SENSOR_CACHE" | grep %s | awk -F',' '{print $%d}'"
+#define CMD_BMC_SDR_GET         "ipmitool sdr -c get %s"
+//#define CMD_BMC_SENSOR_CACHE    "ipmitool sdr -c get TEMP_CPU_PECI TEMP_OP2_ENV TEMP_J2_ENV_1 TEMP_J2_DIE_1 TEMP_J2_ENV_2 TEMP_J2_DIE_2 PSU0_TEMP PSU1_TEMP TEMP_BMC_ENV TEMP_ENV TEMP_ENV_FRONT FAN0_RPM FAN1_RPM FAN2_RPM FAN3_RPM PSU0_FAN1 PSU0_FAN2 PSU1_FAN1 PSU1_FAN2 FAN0_PRSNT_H FAN1_PRSNT_H FAN2_PRSNT_H FAN3_PRSNT_H PSU0_VIN PSU0_VOUT PSU0_IIN PSU0_IOUT PSU0_STBVOUT PSU0_STBIOUT PSU1_VIN PSU1_VOUT PSU1_IIN PSU1_IOUT PSU1_STBVOUT PSU1_STBIOUT > /tmp/bmc_sensor_cache"
+#define CMD_BMC_SENSOR_CACHE    "ipmitool sdr -c get "\
+                                " TEMP_CPU_PECI"\
+                                " TEMP_OP2_ENV"\
+                                " TEMP_J2_ENV_1"\
+                                " TEMP_J2_DIE_1"\
+                                " TEMP_J2_ENV_2"\
+                                " TEMP_J2_DIE_2"\
+                                " PSU0_TEMP"\
+                                " PSU1_TEMP"\
+                                " TEMP_BMC_ENV"\
+                                " TEMP_ENV"\
+                                " TEMP_ENV_FRONT"\
+                                " FAN0_RPM"\
+                                " FAN1_RPM"\
+                                " FAN2_RPM"\
+                                " FAN3_RPM"\
+                                " PSU0_FAN1"\
+                                " PSU0_FAN2"\
+                                " PSU1_FAN1"\
+                                " PSU1_FAN2"\
+                                " FAN0_PRSNT_H"\
+                                " FAN1_PRSNT_H"\
+                                " FAN2_PRSNT_H"\
+                                " FAN3_PRSNT_H"\
+                                " PSU0_VIN"\
+                                " PSU0_VOUT"\
+                                " PSU0_IIN"\
+                                " PSU0_IOUT"\
+                                " PSU0_STBVOUT"\
+                                " PSU0_STBIOUT"\
+                                " PSU1_VIN"\
+                                " PSU1_VOUT"\
+                                " PSU1_IIN"\
+                                " PSU1_IOUT"\
+                                " PSU1_STBVOUT"\
+                                " PSU1_STBIOUT"\
+                                " > "BMC_SENSOR_CACHE
 
-
-const int CPLD_BASE_ADDR[] = {0x30, 0x39, 0x3a, 0x3b, 0x3c};
-
-const char * thermal_id_str[] = {
-    "",
-    "TEMP_CPU_PECI",    
-    "TEMP_OP2_ENV",
-    "TEMP_J2_ENV_1",
-    "TEMP_J2_DIE_1",
-    "TEMP_J2_ENV_2",
-    "TEMP_J2_DIE_2",
-    "PSU0_TEMP",
-    "PSU1_TEMP",    
-    "CPU_PACKAGE",
-    "CPU1",
-    "CPU2",
-    "CPU3",
-    "CPU4",
-    "CPU5",
-    "CPU6",
-    "CPU7",
-    "CPU8",
-    "CPU_BOARD",    
-    "TEMP_BMC_ENV",
-    "TEMP_ENV",
-    "TEMP_ENV_FRONT",
-};
-
-const char * fan_id_str[] = {
-    "",
-    "FAN0_RPM",
-    "FAN1_RPM",
-    "FAN2_RPM",
-    "FAN3_RPM",
-    "PSU0_FAN1",
-    "PSU0_FAN2",
-    "PSU1_FAN1",
-    "PSU1_FAN2",    
-};
-
-const char * fan_id_presence_str[] = {
-    "",
-    "FAN0_PRSNT_H",
-    "FAN1_PRSNT_H",
-    "FAN2_PRSNT_H",
-    "FAN3_PRSNT_H",    
-};
-
-const char * psu_id_str[] = {
-    "",
-    "PSU0",
-    "PSU1",
-    "PSU0_VIN",
-    "PSU0_VOUT",
-    "PSU0_IIN",
-    "PSU0_IOUT",
-    "PSU0_STBVOUT",
-    "PSU0_STBIOUT",
-    "PSU1_VIN",
-    "PSU1_VOUT",
-    "PSU1_IIN",
-    "PSU1_IOUT",   
-    "PSU1_STBVOUT",
-    "PSU1_STBIOUT",
-};
-
+/* BMC Cached String (mapping with ipmitool sensors) */
 bmc_info_t bmc_cache[] =
 {
-    {"TEMP_CPU_PECI", 0},
-    {"TEMP_OP2_ENV", 0},
-    {"TEMP_J2_ENV_1", 0},
-    {"TEMP_J2_DIE_1", 0},
-    {"TEMP_J2_ENV_2", 0},
-    {"TEMP_J2_DIE_2", 0},
-    {"PSU0_TEMP", 0},
-    {"PSU1_TEMP", 0},
-    {"FAN0_RPM", 0},
-    {"FAN1_RPM", 0},
-    {"FAN2_RPM", 0},
-    {"FAN3_RPM", 0},
-    {"PSU0_FAN1", 0},
-    {"PSU0_FAN2", 0},
-    {"PSU1_FAN1", 0},
-    {"PSU1_FAN2", 0},
-    {"FAN0_PRSNT_H",0},
-    {"FAN1_PRSNT_H",0},
-    {"FAN2_PRSNT_H", 0},
-    {"FAN3_PRSNT_H", 0},
-    {"PSU0_VIN", 0},
-    {"PSU0_VOUT", 0},
-    {"PSU0_IIN",0},
-    {"PSU0_IOUT",0},
-    {"PSU0_STBVOUT", 0},
-    {"PSU0_STBIOUT", 0},
-    {"PSU1_VIN", 0},
-    {"PSU1_VOUT", 0},
-    {"PSU1_IIN", 0},
-    {"PSU1_IOUT", 0},
-    {"PSU1_STBVOUT", 0},
-    {"PSU1_STBIOUT", 0}
+    [BMC_ATTR_ID_TEMP_CPU_PECI]  = {"TEMP_CPU_PECI" , 0}, 
+    [BMC_ATTR_ID_TEMP_OP2_ENV]   = {"TEMP_OP2_ENV"  , 0}, 
+    [BMC_ATTR_ID_TEMP_J2_ENV_1]  = {"TEMP_J2_ENV_1" , 0}, 
+    [BMC_ATTR_ID_TEMP_J2_DIE_1]  = {"TEMP_J2_DIE_1" , 0}, 
+    [BMC_ATTR_ID_TEMP_J2_ENV_2]  = {"TEMP_J2_ENV_2" , 0}, 
+    [BMC_ATTR_ID_TEMP_J2_DIE_2]  = {"TEMP_J2_DIE_2" , 0}, 
+    [BMC_ATTR_ID_PSU0_TEMP]      = {"PSU0_TEMP"     , 0}, 
+    [BMC_ATTR_ID_PSU1_TEMP]      = {"PSU1_TEMP"     , 0}, 
+    [BMC_ATTR_ID_TEMP_BMC_ENV]   = {"TEMP_BMC_ENV"  , 0}, 
+    [BMC_ATTR_ID_TEMP_ENV]       = {"TEMP_ENV"      , 0}, 
+    [BMC_ATTR_ID_TEMP_ENV_FRONT] = {"TEMP_ENV_FRONT", 0}, 
+    [BMC_ATTR_ID_FAN0_RPM]       = {"FAN0_RPM"      , 0}, 
+    [BMC_ATTR_ID_FAN1_RPM]       = {"FAN1_RPM"      , 0}, 
+    [BMC_ATTR_ID_FAN2_RPM]       = {"FAN2_RPM"      , 0}, 
+    [BMC_ATTR_ID_FAN3_RPM]       = {"FAN3_RPM"      , 0}, 
+    [BMC_ATTR_ID_PSU0_FAN1]      = {"PSU0_FAN1"     , 0}, 
+    [BMC_ATTR_ID_PSU0_FAN2]      = {"PSU0_FAN2"     , 0}, 
+    [BMC_ATTR_ID_PSU1_FAN1]      = {"PSU1_FAN1"     , 0}, 
+    [BMC_ATTR_ID_PSU1_FAN2]      = {"PSU1_FAN2"     , 0}, 
+    [BMC_ATTR_ID_FAN0_PRSNT_H]   = {"FAN0_PRSNT_H"  , 0},
+    [BMC_ATTR_ID_FAN1_PRSNT_H]   = {"FAN1_PRSNT_H"  , 0},
+    [BMC_ATTR_ID_FAN2_PRSNT_H]   = {"FAN2_PRSNT_H"  , 0}, 
+    [BMC_ATTR_ID_FAN3_PRSNT_H]   = {"FAN3_PRSNT_H"  , 0}, 
+    [BMC_ATTR_ID_PSU0_VIN]       = {"PSU0_VIN"      , 0}, 
+    [BMC_ATTR_ID_PSU0_VOUT]      = {"PSU0_VOUT"     , 0}, 
+    [BMC_ATTR_ID_PSU0_IIN]       = {"PSU0_IIN"      , 0},
+    [BMC_ATTR_ID_PSU0_IOUT]      = {"PSU0_IOUT"     , 0},
+    [BMC_ATTR_ID_PSU0_STBVOUT]   = {"PSU0_STBVOUT"  , 0}, 
+    [BMC_ATTR_ID_PSU0_STBIOUT]   = {"PSU0_STBIOUT"  , 0}, 
+    [BMC_ATTR_ID_PSU1_VIN]       = {"PSU1_VIN"      , 0}, 
+    [BMC_ATTR_ID_PSU1_VOUT]      = {"PSU1_VOUT"     , 0}, 
+    [BMC_ATTR_ID_PSU1_IIN]       = {"PSU1_IIN"      , 0}, 
+    [BMC_ATTR_ID_PSU1_IOUT]      = {"PSU1_IOUT"     , 0}, 
+    [BMC_ATTR_ID_PSU1_STBVOUT]   = {"PSU1_STBVOUT"  , 0}, 
+    [BMC_ATTR_ID_PSU1_STBIOUT]   = {"PSU1_STBIOUT"  , 0}
 };
+
+const int CPLD_BASE_ADDR[] = {0x30, 0x39, 0x3a, 0x3b, 0x3c};
 
 static onlp_shlock_t* onlp_lock = NULL;
 
@@ -204,8 +181,7 @@ int bmc_cache_expired_check(long last_time, long new_time, int cache_time)
         if(new_time > last_time) {
             if((new_time - last_time) > cache_time) {
                 bmc_cache_expired = 1;
-            }
-            else {
+            } else {
                 bmc_cache_expired = 0;
             }
         } else if(new_time == last_time) {
@@ -291,7 +267,7 @@ int bmc_sensor_read(int bmc_cache_index, int sensor_type, float *data)
         {
             memset(buf, 0, sizeof(buf));
 
-            if( dev_num >= 16 && dev_num <=19 ) {                
+            if( dev_num >= BMC_ATTR_ID_FAN0_PRSNT_H && dev_num <= BMC_ATTR_ID_FAN3_PRSNT_H ) {                
                 snprintf(get_data_cmd, sizeof(get_data_cmd), CMD_BMC_CACHE_GET, bmc_cache[dev_num].name, 5);
                 fp = popen(get_data_cmd, "r");
                 if(fp != NULL) {

@@ -49,7 +49,40 @@
  */
 const char* onlp_platformi_get(void)
 {
-    return "x86-64-ufispace-s9700-53dx-r0";
+    int mb_cpld1_addr = 0x700;
+    int mb_cpld1_board_type_rev;
+    int mb_cpld1_hw_rev, mb_cpld1_build_rev;
+
+    if (read_ioport(mb_cpld1_addr, &mb_cpld1_board_type_rev) < 0) {
+        AIM_LOG_ERROR("unable to read MB CPLD1 Board Type Revision\n");
+        return "x86-64-ufispace-s9700-53dx-rx";
+    }   
+    mb_cpld1_hw_rev = (((mb_cpld1_board_type_rev) >> 2 & 0x03));
+    mb_cpld1_build_rev = (((mb_cpld1_board_type_rev) & 0x03) | ((mb_cpld1_board_type_rev) >> 5 & 0x04));
+
+    if (mb_cpld1_hw_rev == 0 && mb_cpld1_build_rev == 0) {
+        return "x86-64-ufispace-s9700-53dx-r0";
+    } else if (mb_cpld1_hw_rev == 1 && mb_cpld1_build_rev == 0) {
+        return "x86-64-ufispace-s9700-53dx-r1";
+    } else if (mb_cpld1_hw_rev == 1 && mb_cpld1_build_rev == 1) {
+        return "x86-64-ufispace-s9700-53dx-r2";
+    } else if (mb_cpld1_hw_rev == 1 && mb_cpld1_build_rev == 2) {
+        return "x86-64-ufispace-s9700-53dx-r3";
+    } else if (mb_cpld1_hw_rev == 2 && mb_cpld1_build_rev == 1) {
+        return "x86-64-ufispace-s9700-53dx-r4";
+    } else if (mb_cpld1_hw_rev == 2 && mb_cpld1_build_rev == 2) {
+        return "x86-64-ufispace-s9700-53dx-r5";
+    } else if (mb_cpld1_hw_rev == 2 && mb_cpld1_build_rev == 3) {
+        return "x86-64-ufispace-s9700-53dx-r6";
+    } else if (mb_cpld1_hw_rev == 3 && mb_cpld1_build_rev == 0) {
+        return "x86-64-ufispace-s9700-53dx-r7";
+    } else if (mb_cpld1_hw_rev == 3 && mb_cpld1_build_rev == 1) {
+        return "x86-64-ufispace-s9700-53dx-r8";
+    } else if (mb_cpld1_hw_rev == 3 && mb_cpld1_build_rev == 2) {
+        return "x86-64-ufispace-s9700-53dx-r9";
+    } else {    
+        return "x86-64-ufispace-s9700-53dx-r9";
+    } 
 }
 
 /**
@@ -58,7 +91,7 @@ const char* onlp_platformi_get(void)
  */
 int onlp_platformi_set(const char* platform)
 {
-    return ONLP_STATUS_E_UNSUPPORTED;
+    return ONLP_STATUS_OK;
 }
 
 /**
