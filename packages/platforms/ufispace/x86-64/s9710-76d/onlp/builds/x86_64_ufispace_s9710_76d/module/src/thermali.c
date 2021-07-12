@@ -67,12 +67,14 @@ static onlp_thermal_info_t thermal_info[] = {
     THERMAL_INFO(ONLP_THERMAL_CPU_7, "CPU Thermal 7", THERMAL_THRESHOLD_INIT_DEFAULTS),
     THERMAL_INFO(ONLP_THERMAL_ADC_CPU, "ADC_CPU_TEMP", THERMAL_THRESHOLD_CPU_PECI),
     THERMAL_INFO(ONLP_THERMAL_CPU_PECI, "TEMP_CPU_PECI", THERMAL_THRESHOLD_CPU_PECI),
-    THERMAL_INFO(ONLP_THERMAL_LM75_U160, "TEMP_LM75_U160", THERMAL_THRESHOLD_LM75),
-    THERMAL_INFO(ONLP_THERMAL_LM75_U161, "TEMP_LM75_U161", THERMAL_THRESHOLD_LM75),
-    THERMAL_INFO(ONLP_THERMAL_LM75_U170, "TEMP_LM75_U170", THERMAL_THRESHOLD_LM75),
-    THERMAL_INFO(ONLP_THERMAL_LM75_U185, "TEMP_LM75_U185", THERMAL_THRESHOLD_LM75),
-    THERMAL_INFO(ONLP_THERMAL_LM75_U186, "TEMP_LM75_U186", THERMAL_THRESHOLD_LM75),
-    THERMAL_INFO(ONLP_THERMAL_LM75_U187, "TEMP_LM75_U187", THERMAL_THRESHOLD_LM75),    
+    THERMAL_INFO(ONLP_THERMAL_MAC_ENV_1, "TEMP_MAC_ENV_1", THERMAL_THRESHOLD_LM75),
+    THERMAL_INFO(ONLP_THERMAL_MAC_ENV_2, "TEMP_MAC_ENV_2", THERMAL_THRESHOLD_LM75),
+    THERMAL_INFO(ONLP_THERMAL_FRONT_ENV_1, "TEMP_FRONT_ENV_1", THERMAL_THRESHOLD_LM75),
+    THERMAL_INFO(ONLP_THERMAL_FRONT_ENV_2, "TEMP_FRONT_ENV_2", THERMAL_THRESHOLD_LM75),
+    THERMAL_INFO(ONLP_THERMAL_ENV_1, "TEMP_ENV_1", THERMAL_THRESHOLD_LM75),    
+    THERMAL_INFO(ONLP_THERMAL_ENV_2, "TEMP_ENV_2", THERMAL_THRESHOLD_LM75),
+    THERMAL_INFO(ONLP_THERMAL_EXT_ENV_1, "TEMP_EXT_ENV_1", THERMAL_THRESHOLD_LM75),    
+    THERMAL_INFO(ONLP_THERMAL_EXT_ENV_2, "TEMP_EXT_ENV_2", THERMAL_THRESHOLD_LM75),
     THERMAL_INFO(ONLP_THERMAL_PSU_0, "PSU-0-Thermal", THERMAL_THRESHOLD_PSU),
     THERMAL_INFO(ONLP_THERMAL_PSU_1, "PSU-1-Thermal", THERMAL_THRESHOLD_PSU),
 };
@@ -104,8 +106,55 @@ int ufi_bmc_thermal_info_get(onlp_thermal_info_t* info, int id)
 {
     int rc=0;
     float data=0;
+    int bmc_attr_id = BMC_ATTR_ID_MAX;
+
+    switch(id)
+    {
+        case ONLP_THERMAL_ADC_CPU:
+            bmc_attr_id = BMC_ATTR_ID_ADC_CPU_TEMP;
+            break;
+        case ONLP_THERMAL_CPU_PECI:
+            bmc_attr_id = BMC_ATTR_ID_TEMP_CPU_PECI;
+            break;
+        case ONLP_THERMAL_MAC_ENV_1:
+            bmc_attr_id = BMC_ATTR_ID_TEMP_MAC_ENV_1;
+            break;
+        case ONLP_THERMAL_MAC_ENV_2:
+            bmc_attr_id = BMC_ATTR_ID_TEMP_MAC_ENV_2;
+            break;
+        case ONLP_THERMAL_FRONT_ENV_1:
+            bmc_attr_id = BMC_ATTR_ID_TEMP_FRONT_ENV_1;
+            break;
+        case ONLP_THERMAL_FRONT_ENV_2:
+            bmc_attr_id = BMC_ATTR_ID_TEMP_FRONT_ENV_2;
+            break;
+        case ONLP_THERMAL_ENV_1:
+            bmc_attr_id = BMC_ATTR_ID_TEMP_ENV_1;
+            break;
+        case ONLP_THERMAL_ENV_2:
+            bmc_attr_id = BMC_ATTR_ID_TEMP_ENV_2;
+            break;
+        case ONLP_THERMAL_EXT_ENV_1:
+            bmc_attr_id = BMC_ATTR_ID_TEMP_EXT_ENV_1;
+            break;
+        case ONLP_THERMAL_EXT_ENV_2:
+            bmc_attr_id = BMC_ATTR_ID_TEMP_EXT_ENV_2;
+            break;
+        case ONLP_THERMAL_PSU_0:
+            bmc_attr_id = BMC_ATTR_ID_PSU0_TEMP;
+            break;
+        case ONLP_THERMAL_PSU_1:
+            bmc_attr_id = BMC_ATTR_ID_PSU1_TEMP;
+            break;
+        default:
+            bmc_attr_id = BMC_ATTR_ID_MAX;
+    }
+
+    if(bmc_attr_id == BMC_ATTR_ID_MAX) {
+        return ONLP_STATUS_E_PARAM;
+    }
     
-    rc = bmc_sensor_read(id + CACHE_OFFSET_THERMAL, THERMAL_SENSOR, &data);
+    rc = bmc_sensor_read(bmc_attr_id, THERMAL_SENSOR, &data);
     if ( rc < 0) {
         AIM_LOG_ERROR("unable to read sensor info from BMC, sensor=%d\n", id);
         return rc;
@@ -145,7 +194,7 @@ int onlp_thermali_info_get(onlp_oid_t id, onlp_thermal_info_t* rv)
             break;        
         case ONLP_THERMAL_ADC_CPU:
         case ONLP_THERMAL_CPU_PECI:
-        case ONLP_THERMAL_LM75_U160 ... ONLP_THERMAL_LM75_U187:
+        case ONLP_THERMAL_MAC_ENV_1 ... ONLP_THERMAL_EXT_ENV_2:
         case ONLP_THERMAL_PSU_0 ... ONLP_THERMAL_PSU_1:
             rc = ufi_bmc_thermal_info_get(rv, sensor_id);
             break;    

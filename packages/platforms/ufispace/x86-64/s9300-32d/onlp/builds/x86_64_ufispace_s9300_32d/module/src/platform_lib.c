@@ -137,6 +137,8 @@ bmc_info_t bmc_cache[] =
     {"FAN3_DIR", 0},
     {"FAN4_DIR", 0},
     {"FAN5_DIR", 0},
+    {"PSU0_FAN1_DIR", 0},
+    {"PSU1_FAN1_DIR", 0},
     {"PSU0_VIN", 0},
     {"PSU0_VOUT", 0},
     {"PSU0_IIN",0},
@@ -237,6 +239,10 @@ get_bmc_cache_dev_names(int dev_size, char *devs)
     int dev_num;
     devs[0] = '\0';
     for(dev_num = 0; dev_num < dev_size; dev_num++) {
+        // exclude following dev to avoid sdr get error
+        if(dev_num >= ID_FAN0_DIR && dev_num <= ID_PSU1_FAN1_DIR) {
+            continue;
+        }
         strcat(devs, bmc_cache[dev_num].name);
         strcat(devs, " ");
     }
@@ -260,7 +266,6 @@ bmc_sensor_read(int bmc_cache_index, int sensor_type, float *data)
     long file_last_time = 0;
     static long bmc_cache_time = 0;
     char* presence_str = "Present";
-    char* assert_str = "Asserted";
     
     switch(sensor_type) {
         case FAN_SENSOR:
@@ -311,11 +316,9 @@ bmc_sensor_read(int bmc_cache_index, int sensor_type, float *data)
             if( dev_num >= ID_FAN0_PSNT_L && dev_num <=ID_FAN5_PSNT_L ) {                
                 sprintf(get_data_cmd, CMD_BMC_CACHE_GET, bmc_cache[dev_num].name, 5);
                 fp = popen(get_data_cmd, "r");
-                if(fp != NULL)
-                {
-                    if(fgets(buf, sizeof(buf), fp) != NULL)
-                    {
-                        if( strstr(buf, presence_str) != NULL ) {
+                if(fp != NULL) {
+                    if(fgets(buf, sizeof(buf), fp) != NULL) {
+                        if(strstr(buf, presence_str) != NULL) {
                             f_rv = 1;
                         } else {
                             f_rv = 0;
@@ -325,16 +328,28 @@ bmc_sensor_read(int bmc_cache_index, int sensor_type, float *data)
                 }
                 pclose(fp);
             } else if( dev_num >= ID_FAN0_DIR&& dev_num <=ID_FAN5_DIR ) {                
-                sprintf(get_data_cmd, CMD_BMC_CACHE_GET, bmc_cache[dev_num].name, 5);
+                sprintf(get_data_cmd, CMD_BMC_FAN_TRAY_DIR, dev_num-ID_FAN0_DIR+1);
                 fp = popen(get_data_cmd, "r");
-                if(fp != NULL)
-                {
-                    if(fgets(buf, sizeof(buf), fp) != NULL)
-                    {
-                        if( strstr(buf, assert_str) != NULL ) {
-                            f_rv = FAN_DIR_F2B;
-                        } else {
+                if(fp != NULL) {
+                    if(fgets(buf, sizeof(buf), fp) != NULL) {
+                        if(atoi(buf) == FAN_DIR_B2F) {
                             f_rv = FAN_DIR_B2F;
+                        } else {
+                            f_rv = FAN_DIR_F2B;
+                        }                        
+                        bmc_cache[dev_num].data = f_rv;
+                    }
+                }
+                pclose(fp);
+            } else if( dev_num >= ID_PSU0_FAN1_DIR && dev_num <=ID_PSU1_FAN1_DIR ) {                
+                sprintf(get_data_cmd, CMD_BMC_PSU_FAN_DIR, dev_num-ID_PSU0_FAN1_DIR+1);
+                fp = popen(get_data_cmd, "r");
+                if(fp != NULL) {
+                    if(fgets(buf, sizeof(buf), fp) != NULL) {
+                        if(atoi(buf) == FAN_DIR_B2F) {
+                            f_rv = FAN_DIR_B2F;
+                        } else {
+                            f_rv = FAN_DIR_F2B;
                         }                        
                         bmc_cache[dev_num].data = f_rv;
                     }
@@ -343,8 +358,7 @@ bmc_sensor_read(int bmc_cache_index, int sensor_type, float *data)
             } else {                
                 sprintf(get_data_cmd, CMD_BMC_CACHE_GET, bmc_cache[dev_num].name, 2);
                 fp = popen(get_data_cmd, "r");
-                if(fp != NULL)
-                {
+                if(fp != NULL) {
                     if(fgets(buf, sizeof(buf), fp) != NULL) {
                         f_rv = atof(buf);
                         bmc_cache[dev_num].data = f_rv;
@@ -379,11 +393,16 @@ bmc_fru_read(onlp_psu_info_t* info, int fru_id)
     int cache_time = 0;
     int bmc_cache_expired = 0;
     long file_last_time = 0;
-    static long bmc_fru_cache_time = 0;
+    static long bmc_fru_cache_time[PSU_NUM+1] = {0,0,0};  // index 0 for dummy
     char fru_model[] = "Product Name";  //only Product Name can identify AC/DC
     char fru_serial[] = "Product Serial";
     int cache_idx;
 
+    // check fru id
+    if(fru_id > PSU_NUM) {
+        AIM_LOG_ERROR("invalid fru_id %d\n", fru_id);
+        return ONLP_STATUS_E_INTERNAL;
+    }
 
     cache_time = FRU_CACHE_TIME;
     snprintf(cache_file, sizeof(cache_file), BMC_FRU_CACHE, fru_id);
@@ -402,17 +421,17 @@ bmc_fru_read(onlp_psu_info_t* info, int fru_id)
         bmc_cache_expired = 1;
     }
 
-    if(bmc_fru_cache_time == 0 && check_file_exist(cache_file, &file_last_time)) {
+    if(bmc_fru_cache_time[fru_id] == 0 && check_file_exist(cache_file, &file_last_time)) {
         bmc_cache_expired = 1;
         gettimeofday(&new_tv,NULL);
-        bmc_fru_cache_time = new_tv.tv_sec;
+        bmc_fru_cache_time[fru_id] = new_tv.tv_sec;
     }
 
     //update cache
     if(bmc_cache_expired == 1)
     {
         ONLP_LOCK();
-        if(bmc_cache_expired_check(file_last_time, bmc_fru_cache_time, cache_time)) {
+        if(bmc_cache_expired_check(file_last_time, bmc_fru_cache_time[fru_id], cache_time)) {
             // cache expired, update cache file 
             snprintf(cache_cmd, sizeof(cache_cmd), CMD_BMC_FRU_CACHE, fru_id, cache_file);
             system(cache_cmd);
@@ -460,7 +479,7 @@ bmc_fru_read(onlp_psu_info_t* info, int fru_id)
 
 
         gettimeofday(&new_tv,NULL);
-        bmc_fru_cache_time = new_tv.tv_sec;
+        bmc_fru_cache_time[fru_id] = new_tv.tv_sec;
         ONLP_UNLOCK();
     }
 
@@ -928,8 +947,24 @@ bmc_fan_info_get(onlp_fan_info_t* info, int id)
             info->status |= ONLP_FAN_STATUS_F2B;
             info->status &= ~ONLP_FAN_STATUS_B2F;
         }
-    }
+    } else if (id >= FAN_ID_PSU0_FAN1 && id <= FAN_ID_PSU1_FAN1) {
+        rv = bmc_sensor_read(id-FAN_ID_PSU0_FAN1+ID_PSU0_FAN1_DIR, FAN_SENSOR, &data);
+        if ( rv != ONLP_STATUS_OK) {
+            AIM_LOG_ERROR("unable to read sensor info from BMC, sensor=%d\n", id);
+            return rv;
+        }
+        dir = (int) data;
 
+        if (dir == FAN_DIR_B2F) {
+            // B2F
+            info->status |= ONLP_FAN_STATUS_B2F;
+            info->status &= ~ONLP_FAN_STATUS_F2B;
+        } else {
+            // F2B
+            info->status |= ONLP_FAN_STATUS_F2B;
+            info->status &= ~ONLP_FAN_STATUS_B2F;
+        }
+    }
     return ONLP_STATUS_OK;
 }
 
