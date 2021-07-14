@@ -653,9 +653,6 @@ class OnlPlatform_x86_64_ufispace_s9100_32x_r0(OnlPlatformUfiSpace):
         os.system("i2cset -m 0x40 -y -r 9 0x22 2 0xFF")
         os.system("i2cset -m 0x80 -y -r 9 0x22 2 0x00")
 
-        # onie syseeprom
-        self.insmod("x86-64-ufispace-s9100-32x-onie-syseeprom.ko")
-
         return True
         
         

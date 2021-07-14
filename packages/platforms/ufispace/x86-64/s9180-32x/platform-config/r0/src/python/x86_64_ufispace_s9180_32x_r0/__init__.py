@@ -337,9 +337,6 @@ class OnlPlatform_x86_64_ufispace_s9180_32x_r0(OnlPlatformUfiSpace):
         os.system("i2cset -y -r 50 0x75 6 0x00")
         os.system("i2cset -y -r 50 0x75 7 0x00")
 
-        # init onie syseeprom
-        self.insmod("x86-64-ufispace-s9180-32x-onie-syseeprom.ko")
-
         return True
         
     def baseconfig_bmc(self):
@@ -523,9 +520,6 @@ class OnlPlatform_x86_64_ufispace_s9180_32x_r0(OnlPlatformUfiSpace):
         # init SFP(0/1) EEPROM
         self.new_i2c_device('sff8436', 0x50, 45)
         self.new_i2c_device('sff8436', 0x50, 46)
-
-        # init onie syseeprom
-        self.insmod("x86-64-ufispace-s9180-32x-onie-syseeprom.ko")
 
         return True
 
