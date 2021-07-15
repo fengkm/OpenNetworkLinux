@@ -35,6 +35,12 @@
   }
 
 #define IDPROM_PATH   "/sys/bus/i2c/devices/0-0057/eeprom"
+#define CMD_BIOS_VER  "dmidecode -s bios-version | tail -1 | tr -d '\r\n'"
+#define CMD_BMC_VER_1 "expr `ipmitool mc info | grep 'Firmware Revision' | cut -d':' -f2 | cut -d'.' -f1` + 0"
+#define CMD_BMC_VER_2 "expr `ipmitool mc info | grep 'Firmware Revision' | cut -d':' -f2 | cut -d'.' -f2` + 0"
+#define CMD_BMC_VER_3 "echo $((`ipmitool mc info | grep 'Aux Firmware Rev Info' -A 2 | sed -n '2p'`))"
+#define CMD_UCD_VER_T "ipmitool raw 0x3c 0x08 0x1"
+#define CMD_UCD_VER_B "ipmitool raw 0x3c 0x08 0x0"
 
 
 static int parse_ucd_out(char *ucd_out, char *ucd_data, int start, int len){

@@ -25,6 +25,7 @@
 #include <onlp/platformi/attributei.h>
 #include <onlp/stdattrs.h>
 #include <onlplib/file.h>
+#include <onlplib/i2c.h>
 #include "platform_lib.h"
 
 
@@ -35,6 +36,7 @@
   }
 
 #define IDPROM_PATH   "/sys/bus/i2c/devices/0-0051/eeprom"
+#define CMD_BIOS_VER  "dmidecode -s bios-version | tail -1 | tr -d '\r\n'"
 
 
 static int update_attributei_asset_info(onlp_oid_t oid, onlp_asset_info_t* asset_info)

@@ -35,6 +35,8 @@
   }
 
 #define IDPROM_PATH   "/sys/bus/i2c/devices/9-0054/eeprom"
+#define CMD_BIOS_VER  "dmidecode -s bios-version | tail -1 | tr -d '\r\n'"
+
 
 static int update_attributei_asset_info(onlp_oid_t oid, onlp_asset_info_t* asset_info)
 {
