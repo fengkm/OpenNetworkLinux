@@ -307,24 +307,31 @@ static int update_psui_info(int local_id, onlp_psu_info_t* info)
     int ret = ONLP_STATUS_OK;
     int stbmvout, stbmiout;
     float data;
-    int id_offset = 0;
-
+    int attr_vin, attr_vout, attr_iin, attr_iout, attr_stbvout, attr_stbiout;
+    
     if ((info->hdr.status & ONLP_OID_STATUS_FLAG_PRESENT) == 0) {
         //not present, do nothing
         return ONLP_STATUS_OK;
     }
 
     if (local_id == ONLP_PSU_0) {
-        id_offset = ONLP_PSU_0_VIN - local_id;
-    } else if (local_id == ONLP_PSU_1) {
-        id_offset = ONLP_PSU_1_VIN - local_id;
+        attr_vin = BMC_ATTR_ID_PSU0_VIN;
+        attr_vout = BMC_ATTR_ID_PSU0_VOUT;
+        attr_iin = BMC_ATTR_ID_PSU0_IIN;
+        attr_iout = BMC_ATTR_ID_PSU0_IOUT;
+        attr_stbvout = BMC_ATTR_ID_PSU0_STBVOUT;
+        attr_stbiout = BMC_ATTR_ID_PSU0_STBIOUT;
     } else {
-        AIM_LOG_ERROR("unknown PSU_ID (%d), func=%s\n", local_id, __FUNCTION__);
-        return ONLP_STATUS_E_INTERNAL;
+        attr_vin = BMC_ATTR_ID_PSU1_VIN;
+        attr_vout = BMC_ATTR_ID_PSU1_VOUT;
+        attr_iin = BMC_ATTR_ID_PSU1_IIN;
+        attr_iout = BMC_ATTR_ID_PSU1_IOUT;
+        attr_stbvout = BMC_ATTR_ID_PSU1_STBVOUT;
+        attr_stbiout = BMC_ATTR_ID_PSU1_STBIOUT;
     }
 
     /* Get power vin status */
-    ret = bmc_sensor_read(local_id + CACHE_OFFSET_PSU + id_offset + 0, PSU_SENSOR, &data);
+    ret = bmc_sensor_read(attr_vin, PSU_SENSOR, &data);
     if (ret != ONLP_STATUS_OK) {
         return ONLP_STATUS_E_INTERNAL;
     } else {
@@ -332,7 +339,7 @@ static int update_psui_info(int local_id, onlp_psu_info_t* info)
     }
 
     /* Get power vout status */
-    ret = bmc_sensor_read(local_id + CACHE_OFFSET_PSU + id_offset + 1, PSU_SENSOR, &data);
+    ret = bmc_sensor_read(attr_vout, PSU_SENSOR, &data);
     if (ret != ONLP_STATUS_OK) {
         return ONLP_STATUS_E_INTERNAL;
     } else {
@@ -340,7 +347,7 @@ static int update_psui_info(int local_id, onlp_psu_info_t* info)
     }
 
     /* Get power iin status */
-    ret = bmc_sensor_read(local_id + CACHE_OFFSET_PSU + id_offset + 2, PSU_SENSOR, &data);
+    ret = bmc_sensor_read(attr_iin, PSU_SENSOR, &data);
     if (ret != ONLP_STATUS_OK) {
         return ONLP_STATUS_E_INTERNAL;
     } else {
@@ -348,7 +355,7 @@ static int update_psui_info(int local_id, onlp_psu_info_t* info)
     }
 
     /* Get power iout status */
-    ret = bmc_sensor_read(local_id + CACHE_OFFSET_PSU + id_offset + 3, PSU_SENSOR, &data);
+    ret = bmc_sensor_read(attr_iout, PSU_SENSOR, &data);
     if (ret != ONLP_STATUS_OK) {
         return ONLP_STATUS_E_INTERNAL;
     } else {
@@ -356,7 +363,7 @@ static int update_psui_info(int local_id, onlp_psu_info_t* info)
     }
 
     /* Get standby power vout */
-    ret = bmc_sensor_read(local_id + CACHE_OFFSET_PSU + id_offset + 4, PSU_SENSOR, &data);
+    ret = bmc_sensor_read(attr_stbvout, PSU_SENSOR, &data);
     if (ret != ONLP_STATUS_OK) {
         return ONLP_STATUS_E_INTERNAL;
     } else {
@@ -364,7 +371,7 @@ static int update_psui_info(int local_id, onlp_psu_info_t* info)
     }
 
     /* Get standby power iout */
-    ret = bmc_sensor_read(local_id + CACHE_OFFSET_PSU + id_offset + 5, PSU_SENSOR, &data);
+    ret = bmc_sensor_read(attr_stbiout, PSU_SENSOR, &data);
     if (ret != ONLP_STATUS_OK) {
         return ONLP_STATUS_E_INTERNAL;
     } else {

@@ -58,7 +58,7 @@ const char* onlp_platformi_get(void)
  */
 int onlp_platformi_set(const char* platform)
 {
-    return ONLP_STATUS_OK;
+    return ONLP_STATUS_E_UNSUPPORTED;
 }
 
 /**
