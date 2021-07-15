@@ -522,7 +522,6 @@ int onlp_sfpi_dev_read(onlp_oid_id_t id, int devaddr, int addr,
         return ONLP_STATUS_OK;
     }
 
-    devaddr = 0x50;
     if (local_id < QSFP_NIF_PORT_NUM) {
         /* QSFP */
         port_id = local_id;
@@ -584,7 +583,6 @@ int onlp_sfpi_dev_readb(onlp_oid_id_t id, int devaddr, int addr)
         return ONLP_STATUS_OK;
     }
 
-    devaddr = 0x50;
     if (local_id < QSFP_NIF_PORT_NUM) {
         /* QSFP */
         port_id = local_id;
@@ -628,7 +626,6 @@ int onlp_sfpi_dev_writeb(onlp_oid_id_t id, int devaddr, int addr,
         return ONLP_STATUS_OK;
     }
 
-    devaddr = 0x50;
     if (local_id < QSFP_NIF_PORT_NUM) {
         /* QSFP */
         port_id = local_id;
@@ -671,7 +668,6 @@ int onlp_sfpi_dev_readw(onlp_oid_id_t id, int devaddr, int addr)
         return ONLP_STATUS_OK;
     }
 
-    devaddr = 0x50;
     if (local_id < QSFP_NIF_PORT_NUM) {
         /* QSFP */
         port_id = local_id;
@@ -715,7 +711,6 @@ int onlp_sfpi_dev_writew(onlp_oid_id_t id, int devaddr, int addr,
         return ONLP_STATUS_OK;
     }
 
-    devaddr = 0x50;
     if (local_id < QSFP_NIF_PORT_NUM) {
         /* QSFP */
         port_id = local_id;
