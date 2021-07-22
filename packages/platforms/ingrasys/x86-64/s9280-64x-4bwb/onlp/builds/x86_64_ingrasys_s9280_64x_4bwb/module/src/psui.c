@@ -68,12 +68,11 @@ psu_status_info_get(int id, onlp_psu_info_t *info)
     int stbmvout, stbmiout;
     float data;
     int offset_sts = 0, offset_status = 0;
-    int fru_id = 2;
+    int fru_id = id;
 
     if (id == PSU_ID_PSU2) {
         offset_sts = 6;
         offset_status = 2;
-        fru_id = 1;
     }
     
      /* Get PSU present status */

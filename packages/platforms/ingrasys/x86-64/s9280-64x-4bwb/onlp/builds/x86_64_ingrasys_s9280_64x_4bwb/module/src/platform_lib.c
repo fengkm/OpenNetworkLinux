@@ -77,6 +77,10 @@ bmc_info_t bmc_cache[] =
     {"PSU2_IOUT", 0},
     {"PSU2_STBVOUT", 0},
     {"PSU2_STBIOUT", 0},
+    {"LED_SYS", 0},
+    {"LED_FAN", 0},
+    {"LED_PSU1", 0},
+    {"LED_PSU2", 0},
 };
 
 bmc_fru_info_t bmc_fru_cache[] =
@@ -319,7 +323,21 @@ bmc_sensor_read(int bmc_cache_index, int sensor_type, float *data)
                     }
                 }
                 pclose(fp);
-
+            } else if( dev_num >= ID_LED_SYS && dev_num <=ID_LED_PSU2 ) {
+            #ifdef ENABLE_SYSLED
+                sprintf(get_data_cmd, CMD_BMC_LED_GET, dev_num-ID_LED_SYS+1);
+                fp = popen(get_data_cmd, "r");
+                if(fp != NULL) {
+                    if(fgets(buf, sizeof(buf), fp) != NULL) {
+                        f_rv = atoi(buf);
+                        bmc_cache[dev_num].data = f_rv;
+                    }
+                }
+                pclose(fp);
+            #else
+                f_rv = BMC_LED_OFF;
+                bmc_cache[dev_num].data = f_rv;
+            #endif
             } else {                
                 sprintf(get_data_cmd, CMD_BMC_CACHE_GET, bmc_cache[dev_num].name, 2);
                 fp = popen(get_data_cmd, "r");
@@ -537,7 +555,31 @@ bmc_fan_info_get(onlp_fan_info_t* info, int id)
 int
 sys_led_info_get(onlp_led_info_t* info, int id)
 {
-    return ONLP_STATUS_E_UNSUPPORTED;
+    int rv;
+    float data=0;
+    int led_val;
+
+    rv = bmc_sensor_read(id + ID_LED_SYS - 1, LED_SENSOR, &data);
+    if ( rv != ONLP_STATUS_OK) {
+        AIM_LOG_ERROR("unable to read sensor info from BMC, sensor=%d\n", id);
+        return rv;
+    }
+
+    led_val = (int) data;
+
+    switch(led_val) {
+        case BMC_LED_OFF:
+            info->mode = ONLP_LED_MODE_OFF;
+            break;
+        case BMC_LED_GREEN:
+            info->mode = ONLP_LED_MODE_GREEN;
+            break;
+        case BMC_LED_YELLOW:
+            info->mode = ONLP_LED_MODE_YELLOW;
+            break;
+    }
+       
+    return ONLP_STATUS_OK;
 }
 
 int

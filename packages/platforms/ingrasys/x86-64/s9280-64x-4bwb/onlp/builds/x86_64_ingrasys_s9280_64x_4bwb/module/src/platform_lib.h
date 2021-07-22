@@ -104,6 +104,7 @@
 #define CMD_BMC_CACHE_GET           "cat "BMC_SENSOR_CACHE" | grep %s | awk -F',' '{print $%d}'"
 #define CMD_BMC_FRU_CACHE        "ipmitool fru print %d > %s"
 #define CMD_CACHE_FRU_GET        "cat %s | grep '%s' | cut -d':' -f2 | awk '{$1=$1};1' | tr -d '\\n'"
+#define CMD_BMC_LED_GET        "ipmitool raw 0x3c 0x20 0x0 | xargs | cut -d' ' -f%d"
 
 #define FAN_CACHE_TIME          5
 #define PSU_CACHE_TIME          5
@@ -117,13 +118,21 @@
 #define CMD_BMC_VER_3               "echo $((`ipmitool mc info | grep 'Aux Firmware Rev Info' -A 2 | sed -n '2p'`))"
 
 /* FUCNTION ENABLE */
-//#define ENABLE_SYSLED
+//#define ENABLE_SYSLED 1
 
 enum sensor
 {
     FAN_SENSOR = 0,
     PSU_SENSOR,
     THERMAL_SENSOR,
+    LED_SENSOR,
+};
+
+enum bmc_led_status
+{
+    BMC_LED_OFF = 0,
+    BMC_LED_YELLOW,
+    BMC_LED_GREEN,
 };
 
 typedef struct bmc_info_s
@@ -290,6 +299,10 @@ typedef enum bmc_cache_idx_e {
     ID_PSU2_IOUT,
     ID_PSU2_STBVOUT,
     ID_PSU2_STBIOUT,
+    ID_LED_SYS,
+    ID_LED_FAN,
+    ID_LED_PSU1,
+    ID_LED_PSU2,
     ID_MAX,
 } bmc_cache_idx_t;
 

@@ -34,8 +34,8 @@
 #include <onlp/platformi/sfpi.h>
 #include "x86_64_ufispace_s9701_82dc_int.h"
 #include "x86_64_ufispace_s9701_82dc_log.h"
-
 #include <x86_64_ufispace_s9701_82dc/x86_64_ufispace_s9701_82dc_config.h>
+
 #define SYS_DEV                     "/sys/bus/i2c/devices/"
 /* THERMAL */
 #define SYS_CPU_CORETEMP_PREFIX         "/sys/devices/platform/coretemp.0/hwmon/hwmon0/"
@@ -75,7 +75,8 @@
 #define MB_CPLD_SFP_GROUP_RXLOS_ATTR  "cpld_sfp_port_%s_rx_los"
 #define MB_CPLD_MGMT_SFP_STATUS_ATTR  "cpld_mgmt_sfp_port_status"
 #define MB_CPLD_MGMT_SFP_CONIFG_ATTR  "cpld_mgmt_sfp_port_conf"
-#define MB_CPLD_QSFP_PRES_ATTR  "cpld_qsfp_port_64_71_pres"
+#define MB_CPLD_QSFP_G1_PRES_ATTR  "cpld_qsfp_port_64_71_pres"
+#define MB_CPLD_QSFP_G2_PRES_ATTR  "cpld_qsfp_port_72_75_pres"
 #define MB_CPLD_QSFPDD_PRES_ATTR "cpld_qsfpdd_port_0_5_pres"
 #define MB_CPLD_PSU_STS_ATTR    "cpld_psu_status"
 #define MB_CPLD_SYS_LED_ATTR    "cpld_sys_led_ctrl_%d"
@@ -177,6 +178,7 @@ typedef enum led_oid_e {
     LED_OID_FAN = ONLP_LED_ID_CREATE(2),
     LED_OID_PSU0 = ONLP_LED_ID_CREATE(3),
     LED_OID_PSU1 = ONLP_LED_ID_CREATE(4),
+    LED_OID_SYNC = ONLP_LED_ID_CREATE(5),
     
 } led_oid_t;
 

@@ -378,7 +378,6 @@ int onlp_sfpi_dev_readb(int port, uint8_t devaddr, uint8_t addr)
         return ONLP_STATUS_OK;
     }   
 
-    devaddr = 0x50;
     if (local_id < QSFP_PORT_NUM) { //QSFP
         port_id = local_id;
         bus_id = qsfp_port_eeprom_bus_id_array[port_id];
@@ -406,7 +405,6 @@ int onlp_sfpi_dev_writeb(int port, uint8_t devaddr, uint8_t addr, uint8_t value)
         return ONLP_STATUS_OK;
     }
 
-    devaddr = 0x50;
     if (local_id < QSFP_PORT_NUM) {
         /* QSFP */
         port_id = local_id;
@@ -438,7 +436,6 @@ int onlp_sfpi_dev_readw(int port, uint8_t devaddr, uint8_t addr)
         return ONLP_STATUS_OK;
     }
 
-    devaddr = 0x50;
     if (local_id < QSFP_PORT_NUM) {
         /* QSFP */
         port_id = local_id;
@@ -466,7 +463,6 @@ int onlp_sfpi_dev_writew(int port, uint8_t devaddr, uint8_t addr, uint16_t value
         return ONLP_STATUS_OK;
     }
 
-    devaddr = 0x50;
     if (local_id < QSFP_PORT_NUM) {
         /* QSFP */
         port_id = local_id;
@@ -497,7 +493,6 @@ int onlp_sfpi_dev_read(int port, uint8_t devaddr, uint8_t addr, uint8_t* rdata, 
         return ONLP_STATUS_OK;
     }
 
-    devaddr = 0x50;
     if (local_id < QSFP_PORT_NUM) {
         /* QSFP */
         port_id = local_id;

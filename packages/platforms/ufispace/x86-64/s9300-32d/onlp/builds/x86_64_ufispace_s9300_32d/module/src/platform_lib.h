@@ -31,6 +31,7 @@
 #include <onlp/platformi/thermali.h>
 #include <onlp/platformi/ledi.h>
 #include <onlp/platformi/sysi.h>
+#include <onlp/platformi/sfpi.h>
 #include "x86_64_ufispace_s9300_32d_int.h"
 #include "x86_64_ufispace_s9300_32d_log.h"
 #include <x86_64_ufispace_s9300_32d/x86_64_ufispace_s9300_32d_config.h>
@@ -364,13 +365,7 @@ int psu_pwgood_get(int *pw_good, int id);
 
 int sysi_platform_info_get(onlp_platform_info_t* pi);
 
-int qsfpdd_present_get(int port, int *pres_val);
-
-int sfp_present_get(int port, int *pres_val);
-
 bool onlp_sysi_bmc_en_get(void);
-
-int qsfpdd_port_to_group(int port, int *port_group, int *port_index, int *port_mask);
 
 int bmc_thermal_info_get(onlp_thermal_info_t* info, int id);
 

@@ -581,12 +581,28 @@ qsfp_present_get(int port_index, int *pres_val)
     int port_mask;
     int group_pres;
     int port_pres;
+    int port_group;
     char sysfs[128];
-    
+    char *sysfs_attr;
+
+    port_group = port_index / 8;
+    port_index = port_index % 8;
     port_mask = 0b00000001 << port_index;
 
+    switch(port_group) {
+        case 0:
+            sysfs_attr = MB_CPLD_QSFP_G1_PRES_ATTR;
+            break;
+        case 1:
+            sysfs_attr = MB_CPLD_QSFP_G2_PRES_ATTR;
+            break;
+        default:
+            AIM_LOG_ERROR("invalid port=%d, group=%d", port_index, port_group);
+    }
+
+        
     snprintf(sysfs, sizeof(sysfs), "%s/%s", 
-            MB_CPLD4_SYSFS_PATH, MB_CPLD_QSFP_PRES_ATTR);
+            MB_CPLD4_SYSFS_PATH, sysfs_attr);
     if ((rc = onlp_file_read(data, sizeof(data), &data_len, sysfs))
             != ONLP_STATUS_OK) {
         AIM_LOG_ERROR("onlp_file_read failed, error=%d, %s", rc, sysfs);

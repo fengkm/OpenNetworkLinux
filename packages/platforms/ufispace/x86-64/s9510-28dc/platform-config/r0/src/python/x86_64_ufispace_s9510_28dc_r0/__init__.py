@@ -249,9 +249,6 @@ class OnlPlatform_x86_64_ufispace_s9510_28dc_r0(OnlPlatformUfiSpace):
         # init GPIO sysfs
         self.init_gpio()
 
-        # onie syseeprom
-        self.insmod("x86-64-ufispace-s9510-28dc-onie-syseeprom.ko")
-
         #enable ipmi maintenance mode
         self.enable_ipmi_maintenance_mode()
 

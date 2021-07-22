@@ -174,7 +174,7 @@ typedef enum led_oid_e {
     LED_OID_FAN = ONLP_LED_ID_CREATE(2),
     LED_OID_PSU0 = ONLP_LED_ID_CREATE(3),
     LED_OID_PSU1 = ONLP_LED_ID_CREATE(4),
-    
+    LED_OID_SYNC = ONLP_LED_ID_CREATE(5),
 } led_oid_t;
 
 /** led_id */
@@ -184,7 +184,6 @@ typedef enum led_id_e {
     LED_ID_SYS_PSU0 = 3,
     LED_ID_SYS_PSU1 = 4,
     LED_ID_SYS_SYNC = 5,
-    
 } led_id_t;
 
 /** Thermal_oid */

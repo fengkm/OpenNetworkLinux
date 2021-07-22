@@ -443,14 +443,14 @@ bmc_fru_read(onlp_psu_info_t* info, int fru_id)
         if (exec_cmd(get_data_cmd, cmd_out, sizeof(cmd_out)) < 0) {
             AIM_LOG_ERROR("unable to read psu model from BMC, fru id=%d, cmd=%s, out=%s\n", 
                 fru_id, get_data_cmd, cmd_out);
-            return ONLP_STATUS_E_INTERNAL; 
+            goto exit;
         }
 
         //Check output is correct    
         if (strnlen(cmd_out, sizeof(cmd_out))==0){
             AIM_LOG_ERROR("unable to read psu model from BMC, fru id=%d, cmd=%s, out=%s\n", 
                 fru_id, get_data_cmd, cmd_out);
-            return ONLP_STATUS_E_INTERNAL; 
+            goto exit;
         }
 
         // save to cache
@@ -463,14 +463,14 @@ bmc_fru_read(onlp_psu_info_t* info, int fru_id)
         if (exec_cmd(get_data_cmd, cmd_out, sizeof(cmd_out)) < 0) {
             AIM_LOG_ERROR("unable to read psu serial from BMC, fru id=%d, cmd=%s, out=%s\n", 
                 fru_id, get_data_cmd, cmd_out);
-            return ONLP_STATUS_E_INTERNAL; 
+            goto exit; 
         }
 
         //Check output is correct    
         if (strnlen(cmd_out, sizeof(cmd_out))==0){
             AIM_LOG_ERROR("unable to read psu serial from BMC, fru id=%d, cmd=%s, out=%s\n", 
                 fru_id, get_data_cmd, cmd_out);
-            return ONLP_STATUS_E_INTERNAL; 
+            goto exit;
         }
 
         // save to cache
@@ -490,6 +490,10 @@ bmc_fru_read(onlp_psu_info_t* info, int fru_id)
     snprintf(info->serial, sizeof(info->serial), "%s", bmc_fru_cache[cache_idx].data);
     
     return rv;
+
+exit:
+    ONLP_UNLOCK();
+    return ONLP_STATUS_E_INTERNAL;
 }
 
 int
@@ -541,96 +545,6 @@ psu_pwgood_get(int *pw_good, int id)
 }
 
 int
-qsfpdd_present_get(int port, int *pres_val)
-{     
-    int rc;
-    uint8_t data[8];
-    int data_len;
-    int port_group;
-    int group_pres;
-    int port_pres;
-    int port_index;
-    int port_mask = 0b00000001;
-    char sysfs[128];
-   
-    memset(data, 0, sizeof(data));
-
-    //get sysfs_attr_offset
-    rc = qsfpdd_port_to_group(port, &port_group, &port_index, &port_mask);
-    
-    snprintf(sysfs, sizeof(sysfs), 
-                MB_CPLD2_SYSFS_PATH"/"MB_CPLD_QSFPDD_PRES_ATTR, port_group);
-    if ((rc = onlp_file_read(data, sizeof(data), &data_len, sysfs))
-         != ONLP_STATUS_OK) {
-        AIM_LOG_ERROR("onlp_file_read failed, error=%d, %s", rc, sysfs);
-        return ONLP_STATUS_E_INTERNAL;
-    }
-    group_pres = (int) strtol((char *)data, NULL, 0);
-    // val 0 for presence, pres_val set to 1
-    port_pres = (group_pres & port_mask) >> port_index;
-    if (port_pres) {
-        *pres_val = 0;
-    } else {
-        *pres_val = 1;
-    }
-   
-    return ONLP_STATUS_OK;
-}
-
-int 
-sfp_present_get(int port, int *pres_val) 
-{
-    int ret;
-    int rc;
-    uint8_t data[8];
-    int data_len;
-    int port_index;
-    int port_mask;
-    int group_pres;
-    int port_pres;
-    char sysfs[128];
-    char cmd[128];
-    
-
-    port_index = port - QSFPDD_NUM;
-    port_mask = 0b00000001 << port_index;
-    if (port_index == 0) {
-        snprintf(cmd, sizeof(cmd), CMD_SFP_PRES_GET, SFP_0_IFNAME);
-        // debug
-        //AIM_LOG_INFO("[%s] cmd=%s", __FUNCTION__, cmd);
-        ret = system(cmd);
-        *pres_val = (ret==0) ? 1 : 0;
-    } else if (port_index == 1) {
-        snprintf(cmd, sizeof(cmd), CMD_SFP_PRES_GET, SFP_1_IFNAME);
-        // debug
-        //AIM_LOG_INFO("[%s] cmd=%s", __FUNCTION__, cmd);
-        ret = system(cmd);
-        *pres_val = (ret==0) ? 1 : 0;
-    } else if ((port_index > 1) && (port_index < SFP_NUM)) {
-        snprintf(sysfs, sizeof(sysfs), "%s/%s", MB_CPLD2_SYSFS_PATH, 
-                MB_CPLD_SFP_ABS_ATTR);
-        if ((rc = onlp_file_read(data, sizeof(data), &data_len, sysfs))
-              != ONLP_STATUS_OK) {
-            AIM_LOG_ERROR("onlp_file_read failed, error=%d, %s", rc, sysfs);
-            return ONLP_STATUS_E_INTERNAL;
-        }
-        group_pres = (int) strtol((char *)data, NULL, 0);
-        // val 0 for presence, pres_val set to 1
-        port_pres = (group_pres & port_mask) >> port_index;
-        if (port_pres) {
-            *pres_val = 0;
-        } else {
-            *pres_val = 1;
-        }
-    } else {
-        AIM_LOG_ERROR("unknow sfp port, port=%d\n", port);
-        return ONLP_STATUS_E_INTERNAL;
-    }   
-
-    return ONLP_STATUS_OK;
-}
-
-int
 exec_cmd(char *cmd, char* out, int size) {
     FILE *fp;
 
@@ -648,32 +562,6 @@ exec_cmd(char *cmd, char* out, int size) {
     /* close */
     pclose(fp);
 
-    return ONLP_STATUS_OK;
-}
-
-int
-get_ipmitool_len(char *ipmitool_out){
-    size_t str_len=0, ipmitool_len=0;
-    str_len = strlen(ipmitool_out);
-    if (str_len>0) {
-        ipmitool_len = str_len/3;
-    }
-    return ipmitool_len;
-}
-
-int
-parse_ucd_out(char *ucd_out, char *ucd_data, int start, int len){
-    int i=0;
-    char data[3];
-
-    memset(data, 0, sizeof(data));
-
-    for (i=0; i<len; ++i) {
-        data[0] = ucd_out[(start+i)*3 + 1];
-        data[1] = ucd_out[(start+i)*3 + 2];
-        //hex string to int
-        ucd_data[i] = (int) strtol(data, NULL, 16);
-    }
     return ONLP_STATUS_OK;
 }
 
@@ -813,15 +701,6 @@ onlp_sysi_bmc_en_get(void)
 {
     //enable bmc by default
     return true;
-}
-
-int
-qsfpdd_port_to_group(int port, int *port_group, int *port_index, int *port_mask)
-{
-    *port_group  = port / 8;
-    *port_index = port % 8;
-    *port_mask = 0b00000001 << *port_index;
-    return ONLP_STATUS_OK;
 }
 
 int
